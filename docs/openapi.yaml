@@ -1,0 +1,1666 @@
+openapi: 3.0.3
+info:
+  title: ADX API Documentation
+  description: |-
+    技术框架：
+    
+    前端 https://github.com/cool-team-official/cool-admin-vue (框架不支持多语言, 必须预留多语言设计)
+    
+    後端 https://github.com/cool-team-official/cool-admin-go 
+    
+    Some useful links:
+    - [CoolAdminGo文档](https://cool-team-official.github.io/cool-admin-go/#%E6%96%87%E6%A1%A3%E7%9B%AE%E5%BD%95)
+    - [CoolAdminVue文档](https://cool-js.com/admin/vue/quick.html#%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7)
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.1
+servers:
+  - url: https://realtimebidding.medialink-x.com/api/v3
+tags:
+  - name: ADX
+    description: OpenAPI specification
+paths:
+  /admin/base/open/captcha:
+    get:
+      tags:
+        - base/open
+      description: Get an captcha by Id
+      operationId: getCaptcha
+      parameters:
+        - name: height
+          in: query
+          description: captcha height
+          required: true
+          explode: true
+          schema:
+            type: integer
+            default: available
+        - name: width
+          in: query
+          description: captcha width
+          required: true
+          explode: true
+          schema:
+            type: integer
+            default: available    
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/captcha'          
+        '400':
+          description: Invalid captcha value
+
+  /admin/base/open/login:          
+    post:
+      tags:
+        - base/open
+      description: login
+      operationId: login
+      requestBody:
+        description: login body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "admin"
+                password:
+                  type: string
+                  example: "123456"
+                captchaId:
+                  type: string
+                  example: "qjel1e0248ycp0d9q4gq94g1i0zusefi"
+                verifyCode:
+                  type: string
+                  example: "1899"    
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      expire:
+                        type: integer
+                        format: int64
+                      token:
+                        type: string
+                      refreshExpires:
+                        type: integer
+                        format: int64
+                      refreshToken:
+                        type: string
+                required:
+                - code
+                - message
+                    
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"
+                    data: 
+                      expire: 7200
+                      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1JlZnJlc…zQ0fQ.A-A0jfkub9tAExEhoWczNWbnleUlpgxSKloRl1PSDGk"
+                      refreshExpires: 1296000
+                      refreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc1JlZnJlc…1NDR9.juw9DSk3SfjdvYzZbVsPUW4VOLqmGv-eS1Cg458RfeQ"
+                code1001:
+                  value: 
+                    code: 1001
+                    meddage: "账户或密码不正确~"
+    
+        '405':
+          description: Invalid input
+
+  /admin/base/comm/logout:          
+    post:
+      tags:
+        - base/comm
+      description: logout
+      operationId: logout
+ 
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"
+      security:
+        - bearerAuth: []
+  /admin/base/sys/user/page:
+    post:
+      tags:
+        - base/sys
+      description: Page name is 'Manage User'. Get data of user management page. Below the permissions of the logged-in role can be displayed
+      operationId: getUserPage
+      requestBody:
+        required: true
+        description: user page body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/UserPage'   
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []
+  /admin/base/sys/user/info:
+    get:
+      tags:
+        - base/sys
+      description: Returns a single user data
+      operationId: getUserdataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of user to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        $ref: '#/components/schemas/UserPage'  
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1
+                      createTime: '2022-11-01 15:01:03.000'
+                      account: 'admin'
+                      password: 'b77ef5b824c936300f675ebd5a72e186'
+                      name: 'Leo'
+                      roleIdList: [1, 10, 13]
+                      company: 1
+                      type: 'saas'
+                      subtype: ''
+                      ids: 1 
+                      remark: ''
+        '400':
+          description: Invalid ID supplied
+      security:
+        - bearerAuth: []
+  /admin/base/sys/user/add:
+    post:
+      tags:
+        - base/sys
+      description: add data of user management page.
+      operationId: addUserData
+      requestBody:
+        required: true
+        description: add user data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                account:
+                  type: string
+                  example: 'admin'
+                password:
+                  type: string
+                  example: 'b77ef5b824c936300f675ebd5a72e186'            
+                name:
+                  type: string
+                  example: 'Leo'
+                roleIdList:
+                  type: array
+                  items: 
+                    type: integer
+                    format: int64
+                    example: [ 1, 34 ]
+                company:
+                  type: integer
+                  format: int64
+                  example: 1
+                type:
+                  type: string
+                  example: 'saas'
+                subtype:
+                  type: string
+                  example: ''
+                ids:
+                  type: string
+                  example: ''
+                status:
+                  type: integer
+                  format: int64
+                  example: 1
+              required:
+                - account
+                - password
+                - role
+                - type
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []
+  /admin/base/sys/user/delete:
+    post:
+      tags:
+        - base/sys
+      description: Deletes a user data
+      operationId: deleteUser
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"
+      security:
+        - bearerAuth: []
+  /admin/base/sys/user/update:
+    post:
+      tags:
+        - base/sys
+      description: update data of user management page.
+      operationId: updateUserData
+      requestBody:
+        required: true
+        description: update user data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 20
+                createTime: 
+                  type: string
+                  example: "2022-12-14 14:50:06"
+                updateTime: 
+                  type: string
+                  example: "2022-12-14 15:50:06"  
+                account:
+                  type: string
+                  example: 'admin'
+                password:
+                  type: string
+                  example: 'b77ef5b824c936300f675ebd5a72e186'            
+                name:
+                  type: string
+                  example: 'Leo'
+                roleIdList:
+                  type: array
+                  items: 
+                    type: integer
+                    format: int64
+                    example: [ 1, 34 ]
+                company:
+                  type: integer
+                  format: int64
+                  example: 1
+                type:
+                  type: string
+                  example: 'saas'
+                subtype:
+                  type: string
+                  example: ''
+                ids:
+                  type: string
+                  example: ''
+                status:
+                  type: integer
+                  format: int64
+                  example: 1
+              required:
+                - account
+                - password
+                - role
+                - type
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
+  /admin/base/sys/role/page:
+    post:
+      tags:
+        - base/sys
+      description: Page name is 'Manage Role'. Get data of role management page. This page only role "sysadmin" and "admin" can be displayed
+      operationId: getRolePage
+      requestBody:
+        required: true
+        description: role page body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/RolePage'   
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value   
+      security:
+        - bearerAuth: []
+  /admin/base/sys/role/info:
+    get:
+      tags:
+        - base/sys
+      description: Returns a single role data
+      operationId: getRoleDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of user to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      createTime:
+                        type: string
+                      id: 
+                        type: integer
+                        format: int64
+                      label:
+                        type: string
+                      name:
+                        type: string
+                      remark:
+                        type: string
+                      menuIdList:
+                        type: array
+                        items:
+                          type: integer
+                          format: int64
+                      updateTime:
+                        type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1
+                      createTime: '2022-11-01 15:01:03.000'
+                      label: 'sysadmin'
+                      name: '系统管理员'
+                      menuIdList: [ 1, 96, 45, 43 ]
+                      remark: ''
+                      company: 1
+                      updateTime: '2022-11-01 15:01:03.000'
+                code1001:
+                  value:
+                    code: 1001
+                    message: "角色标识不能重复"
+        '400':
+          description: Invalid ID supplied
+      security:
+        - bearerAuth: []
+  /admin/base/sys/role/add:
+    post:
+      tags:
+        - base/sys
+      description: add data of role management page.
+      operationId: addRoleData
+      requestBody:
+        required: true
+        description: add role data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label:
+                  type: string
+                  example: 'sysadmin'
+                name:
+                  type: string
+                  example: '系统管理员'
+                remark:
+                  type: string
+                  example: ''
+                menuIdList:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64 
+                    example: [ 1, 34 ]
+              required:
+                - name
+                - label
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []
+  /admin/base/sys/role/update:
+    post:
+      tags:
+        - base/sys
+      description: update data of role management page.
+      operationId: updateRoleData
+      requestBody:
+        required: true
+        description: update role data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 20
+                createTime: 
+                  type: string
+                  example: "2022-12-14 14:50:06"
+                updateTime: 
+                  type: string
+                  example: "2022-12-14 15:50:06"
+                label:
+                  type: string
+                  example: 'sysadmin'
+                name:
+                  type: string
+                  example: '系统管理员'
+                remark:
+                  type: string
+                  example: ''
+                menuIdList:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64 
+                    example: [ 1, 34 ]
+              required:
+                - name
+                - label
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
+  /admin/base/sys/role/delete:
+    post:
+      tags:
+        - base/sys
+      description: Deletes a role data
+      operationId: deleteRole
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"   
+      security:
+        - bearerAuth: []
+  /admin/base/sys/menu/list:
+    post:
+      tags:
+        - base/sys
+      description: Get data of menu management page. This page only role "sysadmin" can be displayed
+      operationId: getMenuList
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MenuList'   
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
+  /admin/base/sys/menu/info:
+    get:
+      tags:
+        - base/sys
+      description: Returns a single menu data
+      operationId: getMenuDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of menu to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    $ref: '#/components/schemas/MenuList' 
+        '400':
+          description: Invalid ID supplied  
+      security:
+        - bearerAuth: []
+  /admin/base/sys/menu/delete:
+    post:
+      tags:
+        - base/sys
+      description: Deletes menu data
+      operationId: deleteMenu
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success" 
+      security:
+        - bearerAuth: []
+  /admin/base/sys/menu/add:
+    post:
+      tags:
+        - base/sys
+      description: add data of menu management page.
+      operationId: addMenuData
+      requestBody:
+        required: true
+        description: add user data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                icon: 
+                  type: string
+                  example: "icon-workbench"
+                isShow: 
+                  type: integer
+                  format: int64
+                  example: 1
+                keepAlive: 
+                  type: integer
+                  format: int64
+                  example: 1
+                name: 
+                  type: string
+                  example: "工作台"
+                orderNum: 
+                  type: integer
+                  format: int64
+                  example: 1
+                parentId: 
+                  type: string
+                  example: ''
+                perms: 
+                  type: string
+                  example: ''
+                router: 
+                  type: string
+                  example: "/"
+                type: 
+                  type: integer
+                  format: int64
+                  example: 0
+                viewPath: 
+                  type: string
+                  example: ""
+              required:
+                - name
+                - type
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value 
+      security:
+        - bearerAuth: []
+  /admin/base/sys/menu/update:
+    post:
+      tags:
+        - base/sys
+      description: update data of menu management page.
+      operationId: updateMenuData
+      requestBody:
+        required: true
+        description: update menu data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuList'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
+  /admin/base/sys/company/page:
+    post:
+      tags:
+        - base/sys
+      description: Page name is 'Manage Company'. Get data of company management page. This page only role "sysadmin" and "admin" can be displayed
+      operationId: getCompanyPage
+      requestBody:
+        required: true
+        description: company page body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CompanyPage'   
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
+  /admin/base/sys/company/info:
+    get:
+      tags:
+        - base/sys
+      description: Returns a single company data
+      operationId: getCompanyDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of user to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CompanyPage'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []
+  /admin/base/sys/company/add:
+    post:
+      tags:
+        - base/sys
+      description: add data of company management page.
+      operationId: addCompanyData
+      requestBody:
+        required: true
+        description: add company data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                company:
+                  type: string
+                  example: "meitu"
+                srcsys:
+                  type: string
+                  description: option 1. adx_dsp 2. adx_pub 3. dsp_platform 4. saas
+                  example: "adx_dsp"
+                country:
+                  type: string
+                  example: "China"
+                phone:
+                  type: string
+                  example: "0901567890"     
+                contact:
+                  type: string
+                  example: "Mr. Lin"        
+                email:
+                  type: string
+                  example: "medialink-x@medialink-x.com"
+                uid:
+                  type: integer
+                  format: int64
+                  example: 10
+                am_owner:
+                  type: integer
+                  format: int64
+                  example: 10
+                bd_owner:
+                  type: integer
+                  format: int64
+                  example: 10
+                gid:
+                  type: integer
+                  format: int64
+                  example: 10
+                available_inventory:
+                  type: string
+                  description: split by "|"
+                  example: "360|465"
+                remark:
+                  type: string
+                  example: ''
+              required:
+                - company
+                - srcsys
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value   
+      security:
+        - bearerAuth: []
+  /admin/base/sys/company/delete:
+    post:
+      tags:
+        - base/sys
+      description: Deletes company data
+      operationId: deleteCompany
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/sys/company/update:
+    post:
+      tags:
+        - base/sys
+      description: update data of company management page.
+      operationId: updateCompanyData
+      requestBody:
+        required: true
+        description: update company data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompanyPage'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
+  /admin/base/sys/report/page:
+    post:
+      tags:
+        - base/sys
+      description: Page name is 'Manage Report'. Get data of report management page. This page only role "sysadmin" and "admin" can be displayed
+      operationId: getReportPage
+      requestBody:
+        required: true
+        description: report page body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportPage'   
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
+  /admin/base/sys/report/info:
+    get:
+      tags:
+        - base/sys
+      description: Returns a single report data
+      operationId: getReportDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of report to return
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportPage'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/sys/report/add:
+    post:
+      tags:
+        - base/sys
+      description: add data of report management page.
+      operationId: addReportData
+      requestBody:
+        required: true
+        description: add report data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                category:
+                  type: string
+                  example: "Agent Report"
+                name:
+                  type: string
+                  example: "SSP Report"
+                company:
+                  type: integer
+                  format: int64
+                  example: 1
+                url:
+                  type: string
+                  example: "https://adreport.smartconnect-sg.net:9099/..."
+                order:
+                  type: integer
+                  format: int64
+                  example: 0
+                gid:
+                  type: integer
+                  format: int64
+                  example: 10
+              required:
+                - category
+                - name
+                - company
+                - url
+                - order
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []
+  /admin/base/sys/report/delete:
+    post:
+      tags:
+        - base/sys
+      description: Deletes report data
+      operationId: deleteReport
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"   
+      security:
+        - bearerAuth: []              
+  /admin/base/sys/report/update:
+    post:
+      tags:
+        - base/sys
+      description: update data of report management page.
+      operationId: updateReportData
+      requestBody:
+        required: true
+        description: update report data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportPage'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []
+  
+components:
+  schemas:
+    captcha:
+      type: object
+      properties:
+        captchaId:
+          type: string
+          example: 'qjel1e0248ycp0d9q4gq94g1i0zusefi'
+        data:
+          type: string
+          example: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBo…lPSIyNSIgZmlsbD0iI2ZmZiI+MDU0NjwvdGV4dD48L3N2Zz4='
+      xml:
+        name: captcha
+    UserPage:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        createTime:
+          type: string
+          example: '2022-11-01 15:01:03.000'
+        account:
+          type: string
+          example: 'admin'
+        password:
+          type: string
+          example: 'b77ef5b824c936300f675ebd5a72e186'
+        name:
+          type: string
+          example: 'Leo'
+        roleIdList:
+          type: array
+          items: 
+            type: integer
+            format: int64
+            example: [ 1, 34 ]
+        company:
+          type: integer
+          format: int64
+          example: 1
+        type:
+          type: string
+          example: 'saas'
+        subtype:
+          type: string
+          example: ''
+        ids:
+          type: string
+          example: ''
+        status:
+          type: integer
+          format: int64
+          example: 1
+    RolePage:
+        type: object
+        properties:
+          createTime:
+            type: string
+            example: "2022-11-01 15:01:03"
+          id: 
+            type: integer
+            format: int64
+            example: 10
+          label:
+            type: string
+            example: "sysadmin"
+          name:
+            type: string
+            example: "系统管理员"
+          remark:
+            type: string
+            example: ''
+          updateTime:
+            type: string
+            example: "2022-11-01 15:01:03"
+    MenuList:
+      type: object
+      properties:
+        createTime: 
+          type: string
+          example: 2022-11-01 15:01:03"
+        icon: 
+          type: string
+          example: "icon-workbench"
+        id: 
+          type: integer
+          format: int64
+          example: 1
+        isShow: 
+          type: integer
+          format: int64
+          example: 1
+        keepAlive: 
+          type: integer
+          format: int64
+          example: 1
+        name: 
+          type: string
+          example: "工作台"
+        orderNum: 
+          type: integer
+          format: int64
+          example: 1
+        parentId: 
+          type: string
+          example: ''
+        perms: 
+          type: string
+          example: ''
+        router: 
+          type: string
+          example: "/"
+        type: 
+          type: integer
+          format: int64
+          example: 0
+        updateTime: 
+          type: string
+          example: "2022-11-01 15:01:03"
+        viewPath: 
+          type: string
+          example: ""
+      required:
+        - name
+        - type
+    CompanyPage:
+      type: object
+      properties:
+        createTime: 
+          type: string
+          example: 2022-11-01 15:01:03"
+        id: 
+          type: integer
+          format: int64
+          example: 10
+        company:
+          type: string
+          example: "meitu"
+        srcsys:
+          type: string
+          description: option 1. adx_dsp 2. adx_pub 3. dsp_platform 4. saas
+          example: "adx_dsp"
+        country:
+          type: string
+          example: "China"
+        phone:
+          type: string
+          example: "0901567890"     
+        contact:
+          type: string
+          example: "Mr. Lin"        
+        email:
+          type: string
+          example: "medialink-x@medialink-x.com"
+        uid:
+          type: integer
+          format: int64
+          example: 10
+        am_owner:
+          type: integer
+          format: int64
+          example: 10
+        bd_owner:
+          type: integer
+          format: int64
+          example: 10
+        gid:
+          type: integer
+          format: int64
+          example: 10
+        available_inventory:
+          type: string
+          description: split by "|"
+          example: "360|465"
+        remark:
+          type: string
+          example: ''
+        updateTime:
+          type: string
+          example: "2022-11-01 15:01:03" 
+      required:
+        - company
+        - srcsys    
+    ReportPage:
+      type: object
+      properties:
+        createTime: 
+          type: string
+          example: 2022-11-01 15:01:03"
+        id: 
+          type: integer
+          format: int64
+          example: 10
+        category:
+          type: string
+          example: "Agent Report"
+        name:
+          type: string
+          example: "SSP Report"
+        company:
+          type: integer
+          format: int64
+          example: 1
+        url:
+          type: string
+          example: "https://adreport.smartconnect-sg.net:9099/..."
+        order:
+          type: integer
+          format: int64
+          example: 0
+        gid:
+          type: integer
+          format: int64
+          example: 10
+        updateTime:
+          type: string
+          example: "2022-11-01 15:01:03" 
+      required:
+        - category
+        - name  
+        - company
+        - url
+        - order
+    
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    
