@@ -48,7 +48,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.2
+  version: 1.0.3
 servers:
   - url: https://realtimebidding.medialink-x.com/dev
 tags:
@@ -2460,53 +2460,11 @@ paths:
       parameters:
         - name: id
           in: query
-          description: ID of custom targeting to return
+          description: ID of Custom Targeting to return
           required: true
           schema:
-            type: object
-            properties:
-                id:
-                  type: integer
-                  format: int64
-                  example: 3 
-                createTime:
-                  type: string 
-                  example: "2022-12-15 13:35:19"
-                gid:
-                  type: integer
-                  format: int64
-                  example: 3 
-                integration_type:
-                  type: integer
-                  format: int64
-                  example: 1
-                key:
-                  type: string
-                  example: "age"  
-                display_name:
-                  type: string
-                  example: "age"
-                posid:
-                  type: string
-                  example: "192001|192003"    
-                key_type:
-                  type: integer
-                  format: int64
-                  example: 1      
-                value_type:
-                  type: integer
-                  format: int64
-                  example: 1    
-                description:
-                  type: string
-                  example: "age"
-                tool_key:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/KeyValue'
-                updateTime:
-                  type: string 
-                  example: "2022-12-15 13:35:19"  
+            type: integer
+            format: int64  
       responses:
         '200':
           description: successful operation
@@ -2698,6 +2656,2207 @@ paths:
           description: Invalid tag value  
       security:
         - bearerAuth: []          
+  /admin/base/ssp/medialist/page:
+    post:
+      tags:
+        - base/ssp
+      description: Page name is 'Media List'. Get data of media list page. 
+      operationId: getMediaListPage
+      requestBody:
+        required: true
+        description: media list page body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19"
+                            mid: 
+                              type: integer
+                              format: int64
+                              example: 1 
+                            name:
+                              type: string
+                              example: "Smart Connect"
+                            status:
+                              type: integer
+                              format: int64
+                              example: 0
+                            type:
+                              type: integer
+                              format: int64
+                              description: 0=oRTB 1=Max JS Tag 2=Max VAST Wrapper 3=SDK 4=VAST AD Tag URI 5=GAM JS Tag 6=GAM VAST AD Tag URL
+                              example: 0
+                            os:
+                              type: integer
+                              format: int64
+                              description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+                              example: 1     
+                            updateTime:
+                              type: string 
+                              example: "2022-12-15 13:35:19" 
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/ssp/medialist/info:
+    get:
+      tags:
+        - base/ssp
+      description: Returns a single medialist data
+      operationId: getMediaListDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of Media list to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaList'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/ssp/medialist/add:
+    post:
+      tags:
+        - base/ssp
+      description: add data of media list page.
+      operationId: addMediaListData
+      requestBody:
+        required: true
+        description: add media list data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3 
+                name:
+                  type: string
+                  example: "Smart Connect"
+                api:
+                  type: integer
+                  format: int64
+                  description: 1=CUSTOMER 2=RTB2.3 3=RTB2.5
+                  example: 1 
+                status:
+                  type: integer
+                  format: int64
+                  example: 0
+                pubid:
+                  type: integer
+                  format: int64
+                  example: 11
+                store_url:
+                  type: string
+                  example: "https://play.google.com/store/apps/details?id=com.ksmobile.launcher"            
+                bundle:
+                  type: string
+                  example: "com.ksmobile.launcher"
+                type:
+                  type: integer
+                  format: int64
+                  description: 0=oRTB 1=Max JS Tag 2=Max VAST Wrapper 3=SDK 4=VAST AD Tag URI 5=GAM JS Tag 6=GAM VAST AD Tag URL
+                  example: 0
+                os:
+                  type: integer
+                  format: int64
+                  description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+                  example: 1     
+                crid:
+                  type: string
+                  example: "1209_9524236|28466836276" 
+                level:
+                  type: integer
+                  format: int64
+                  description: 1=A-Good Direct 2=B-Bad Diret 3=C-Good Pure SSP 4=D-Bad Pure SSP 5=E-Good Reseller SSP 6=F-Bad Reseller SSP
+                  example: 1
+                company_type:
+                  type: integer
+                  format: int64
+                  description: 0=oRTB 1=DIRECT.  Media List is 0. 
+                  example: 0
+                block_ad_without_adomain:
+                  type: integer
+                  format: int64
+                  example: 0
+                block_ad_without_crid:
+                  type: integer
+                  format: int64
+                  example: 0    
+                block_domain:
+                  type: string
+                  example: "1209_9524236|28466836276" 
+                block_adm_domain:
+                  type: string
+                  example: "1209_9524236|28466836276" 
+                burl_field:
+                  type: integer
+                  format: int64
+                  description: 0=Disable 1=Enable. Display if type = oRTB
+                  example: 1  
+              required:
+                - name
+                - os    
+                - company_type
+                - pubid
+                - type 
+                - gid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/ssp/medialist/delete:
+    post:
+      tags:
+        - base/ssp
+      description: Deletes media list data
+      operationId: deleteMediaList
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/ssp/medialist/update:
+    post:
+      tags:
+        - base/ssp
+      description: update data of media list page.
+      operationId: updateMediaListData
+      requestBody:
+        required: true
+        description: update media list data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaList'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: [] 
+  /admin/base/directpub/application/page:
+    post:
+      tags:
+        - base/directpub
+      description: Page name is 'Application'. Get data of application page. 
+      operationId: getApplicationPage
+      requestBody:
+        required: true
+        description: application page body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19"
+                            mid: 
+                              type: integer
+                              format: int64
+                              example: 1 
+                            name:
+                              type: string
+                              example: "Smart Connect"
+                            status:
+                              type: integer
+                              format: int64
+                              example: 0
+                            type:
+                              type: integer
+                              format: int64
+                              description: 0=oRTB 1=Max JS Tag 2=Max VAST Wrapper 3=SDK 4=VAST AD Tag URI 5=GAM JS Tag 6=GAM VAST AD Tag URL
+                              example: 0
+                            os:
+                              type: integer
+                              format: int64
+                              description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+                              example: 1     
+                            updateTime:
+                              type: string 
+                              example: "2022-12-15 13:35:19" 
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/directpub/application/info:
+    get:
+      tags:
+        - base/directpub
+      description: Returns a single application data
+      operationId: getApplicationDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of Application to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Application'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/directpub/Application/add:
+    post:
+      tags:
+        - base/directpub
+      description: add data of application page.
+      operationId: addApplicationData
+      requestBody:
+        required: true
+        description: add application data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3 
+                name:
+                  type: string
+                  example: "Smart Connect"
+                api:
+                  type: integer
+                  format: int64
+                  description: 1=CUSTOMER 2=RTB2.3 3=RTB2.5
+                  example: 1 
+                status:
+                  type: integer
+                  format: int64
+                  example: 0
+                pubid:
+                  type: integer
+                  format: int64
+                  example: 11
+                store_url:
+                  type: string
+                  example: "https://play.google.com/store/apps/details?id=com.ksmobile.launcher"            
+                bundle:
+                  type: string
+                  example: "com.ksmobile.launcher"
+                type:
+                  type: integer
+                  format: int64
+                  description: 0=oRTB 1=Max JS Tag 2=Max VAST Wrapper 3=SDK 4=VAST AD Tag URI 5=GAM JS Tag 6=GAM VAST AD Tag URL
+                  example: 0
+                os:
+                  type: integer
+                  format: int64
+                  description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+                  example: 1     
+                crid:
+                  type: string
+                  example: "1209_9524236|28466836276" 
+                level:
+                  type: integer
+                  format: int64
+                  description: 1=A-Good Direct 2=B-Bad Diret 3=C-Good Pure SSP 4=D-Bad Pure SSP 5=E-Good Reseller SSP 6=F-Bad Reseller SSP
+                  example: 1
+                company_type:
+                  type: integer
+                  format: int64
+                  description: 0=oRTB 1=DIRECT.  Media List is 0. 
+                  example: 0
+                block_ad_without_adomain:
+                  type: integer
+                  format: int64
+                  example: 0
+                block_ad_without_crid:
+                  type: integer
+                  format: int64
+                  example: 0    
+                block_domain:
+                  type: string
+                  example: "1209_9524236|28466836276" 
+                block_adm_domain:
+                  type: string
+                  example: "1209_9524236|28466836276" 
+                burl_field:
+                  type: integer
+                  format: int64
+                  description: 0=Disable 1=Enable. Display if type = oRTB
+                  example: 1  
+                app_domain:
+                  type: string
+                  example: "https://www.lucidpix.com/"
+                app_type:
+                  type: integer
+                  format: int64
+                  description: 1=Owned & Operated 2=Non Owned & Operated
+                  example: 1  
+                block_ad_without_category:
+                  type: integer
+                  format: int64
+                  example: 0
+                block_category:  
+                  type: string
+                  description: multiple select.
+                  example: "IAB1|IAB1-1"   
+              required:
+                - name
+                - os    
+                - company_type
+                - pubid
+                - type 
+                - gid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/directpub/Application/delete:
+    post:
+      tags:
+        - base/directpub
+      description: Deletes application data
+      operationId: deleteApplication
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/directpub/application/update:
+    post:
+      tags:
+        - base/directpub
+      description: update data of application page.
+      operationId: updateApplicationData
+      requestBody:
+        required: true
+        description: update application data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Application'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []    
+  /admin/base/ssp/mediaposid/page:
+    post:
+      tags:
+        - base/ssp
+      description: Page name is 'Media Posid'. Get data of media posid page. 
+      operationId: getMediaPosidPage
+      requestBody:
+        required: true
+        description: media posid page body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19"
+                            posid: 
+                              type: integer
+                              format: int64
+                              example: 1 
+                            gid:
+                              type: integer
+                              format: int64
+                              example: 3 
+                            mid:
+                              type: integer
+                              format: int64
+                              example: 1 
+                            status:
+                              type: integer
+                              format: int64
+                              example: 0
+                            mid_name:
+                              type: string
+                              description: media name
+                              example: "Aceex" 
+                            pos_name:
+                              type: string
+                              description: media posid name
+                              example: "Aceex_APAC_N_All"
+                            type:
+                              type: integer
+                              format: int64
+                              description: Get form table:tab_online_mid. 0=oRTB 1=Max JS Tag 2=Max VAST Wrapper 3=SDK 4=VAST AD Tag URI 5=GAM JS Tag 6=GAM VAST AD Tag URL
+                              example: 0
+                            updateTime:
+                              type: string 
+                              example: "2022-12-15 13:35:19" 
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/ssp/mediaposid/info:
+    get:
+      tags:
+        - base/ssp
+      description: Returns a single media posid data
+      operationId: getMediaPosidDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of media posid to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MediaPosid'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/ssp/mediaposid/add:
+    post:
+      tags:
+        - base/ssp
+      description: add data of media posid page.
+      operationId: addMediaPosidData
+      requestBody:
+        required: true
+        description: add media posid data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3 
+                mid:
+                  type: integer
+                  format: int64
+                  example: 1 
+                status:
+                  type: integer
+                  format: int64
+                  example: 0
+                name:
+                  type: string
+                  example: "Test_iOS Native Display 1200*628"
+                ad_show:
+                  type: integer
+                  format: int64
+                  description: options get from table:tab_online_style
+                  example: 202
+                markup:
+                  type: integer
+                  format: int64
+                  example: 40  
+                tmax:
+                  type: integer
+                  format: int64
+                  example: 400          
+                endpoint:
+                  type: string
+                  example: "https://ads.sdkadmobi.com/bidder/?posid=702001"
+                os:
+                  type: integer
+                  format: int64
+                  description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+                  example: 1  
+                ivt_strategy:
+                  type: integer
+                  format: int64
+                  description: 0=None(0) 1=Apply high IVT bundle to white bundle list(1)  2=Apply high IVT bundle to black bundle list(2) 
+                  example: 0            
+                style:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=Native 2=Banner 3=Video
+                  example: 1  
+                device_type:
+                  type: string
+                  description: multiple select. 1=Mobile/Tablet 2=Personal-Computer 3=Connected-TV 4=Phone 5=Tablet 6=Connected-Device 7=Set-TopBox
+                  example: "1|4|5"
+                tactical_filter:
+                  type: integer
+                  format: int64
+                  example: 1  
+                rate:
+                  type: integer
+                  format: int64
+                  example: 1 
+                white_dsp:
+                  type: string
+                  description: multiple select. Get dsp list.
+                  example: "1018|3067"
+                dsp_black:
+                  type: string
+                  description: multiple select. Get dsp list.
+                  example: "1018|3067"
+                qps:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      os:
+                        type: integer
+                        format: int64
+                        description: multiple select. 1=iOS 2=Android 4=CTV 5=Web
+                        example: 1  
+                      style:
+                        type: integer
+                        format: int64
+                        description: multiple select. 1=Native 2=Banner 3=Video
+                        example: 1  
+                      country:
+                        type: string
+                        description: multiple select. Get frome table:tab_cn_code
+                        example: "AR"
+                      qps:
+                        type: integer
+                        format: int64
+                        description: 100-999
+                        example: 100  
+                bidfloor:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      style:
+                        type: integer
+                        format: int64
+                        description: multiple select. 1=Native 2=Banner 3=Video
+                        example: 1  
+                      country:
+                        type: string
+                        description: multiple select. Get frome table:tab_cn_code
+                        example: "AR"
+                      floor:
+                        type: number
+                        description: grater than 0.01
+                        example: 0.1
+                floorratio:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      apply_to_all:
+                        type: integer
+                        format: int64
+                        description: 0=no 1=yes
+                        example: 1  
+                      bundle:
+                        type: string
+                        example: "345002|www.ggg.com"
+                      floor_ratio:
+                        type: integer
+                        format: int64
+                        description: grater than 0
+                        example: 1  
+                poscap:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      style:
+                        type: integer
+                        format: int64
+                        description: 1=Native 2=Banner 3=Video
+                        example: 1  
+                      cap:
+                        type: number
+                        description: grater than 0.01
+                        example: 0.01
+                white_pkg:
+                  type: string
+                  example: "345002|www.ggg.com"
+                black_pkg:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      seller_id:
+                        type: string
+                        example: "950"
+                      bundle:
+                        type: string
+                        example: "345002|www.ggg.com"
+                white_pkg_ivt:
+                  type: string
+                  example: "345002|www.ggg.com"
+                black_pkg_ivt:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      seller_id:
+                        type: string
+                        example: "950"
+                      bundle:
+                        type: string
+                        example: "345002|www.ggg.com"
+                allowance:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      style:
+                        type: integer
+                        format: int64
+                        description: multiple select. 1=Native 2=Banner 3=Video
+                        example: 1  
+                      country:
+                        type: string
+                        description: multiple select. Get frome table:tab_cn_code
+                        example: "AR"
+                      bid_price:
+                        type: number
+                        description: grater than 0.01
+                        example: 0.1
+                      daily_limit: 
+                        type: integer
+                        format: int64
+                        description: grater than 0
+                        example: 1  
+                pos_extra_info:  
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                        example: "test" 
+                      value:
+                        type: string
+                        description: split by |
+                        example: "123|123"
+                      description:
+                        type: string
+                        example: ""
+                bundle:
+                  type: string
+                  example: "tv.fourgtv.mobile"
+                offline_traffic:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1 
+                sdk_funnel_analysis:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1          
+                store_url:
+                  type: string
+                  description: url
+                  example: "https://play.google.com/store/apps/details?id=com.drawpoetry"
+                app_name:
+                  type: string
+                  example: "烘爐地求籤"
+                app_domain:
+                  type: string
+                  example: "www.medialinkstarx.com/"
+                test_mode:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1    
+                prebid_whiteops:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1 
+                postbid_protected_media:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1           
+                postbid_protected_media_sampling_ratio:
+                  type: integer
+                  format: int64
+                  description: 10~100%
+                  example: 100  
+                postbid_whiteops:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1  
+                postbid_whiteops_sampling_ratio:
+                  type: integer
+                  format: int64
+                  description: 10~100%
+                  example: 100  
+                postbid_pixalate:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1  
+                postbid_pixalate_sampling_ratio:
+                  type: integer
+                  format: int64
+                  description: 10~100%
+                  example: 100 
+                geoedge:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1 
+                geoedge_sampling_ratio:
+                  type: integer
+                  format: int64
+                  description: 10~100%
+                  example: 100 
+                geoedge_policy_key:
+                  type: string 
+                  example: ""  
+                updateTime:
+                  type: string 
+                  example: "2022-12-15 13:35:19"    
+              required:
+                - name
+                - mid    
+                - style
+                - ad_show
+                - markup
+                - os
+                - qps
+                - gid   
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/ssp/mediaposid/delete:
+    post:
+      tags:
+        - base/ssp
+      description: Deletes media posid data
+      operationId: deleteMediaPosid
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/ssp/mediaposid/update:
+    post:
+      tags:
+        - base/ssp
+      description: update data of media posid page.
+      operationId: updateMediaPosidData
+      requestBody:
+        required: true
+        description: update media posid data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MediaPosid'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []    
+  /admin/base/directpub/placement/page:
+    post:
+      tags:
+        - base/directpub
+      description: Page name is 'Placement'. Get data of placement page. 
+      operationId: getPlacementPage
+      requestBody:
+        required: true
+        description: placement page body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19"
+                            posid: 
+                              type: integer
+                              format: int64
+                              example: 1 
+                            gid:
+                              type: integer
+                              format: int64
+                              example: 3 
+                            mid:
+                              type: integer
+                              format: int64
+                              example: 1 
+                            status:
+                              type: integer
+                              format: int64
+                              example: 0
+                            mid_name:
+                              type: string
+                              description: media name
+                              example: "Aceex" 
+                            pos_name:
+                              type: string
+                              description: media posid name
+                              example: "Aceex_APAC_N_All"
+                            type:
+                              type: integer
+                              format: int64
+                              description: Get form table:tab_online_mid. 0=oRTB 1=Max JS Tag 2=Max VAST Wrapper 3=SDK 4=VAST AD Tag URI 5=GAM JS Tag 6=GAM VAST AD Tag URL
+                              example: 0
+                            updateTime:
+                              type: string 
+                              example: "2022-12-15 13:35:19" 
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/directpub/placement/info:
+    get:
+      tags:
+        - base/directpub
+      description: Returns a single placement data
+      operationId: getPlacementDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of placement to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Placement'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/directpub/placement/add:
+    post:
+      tags:
+        - base/directpub
+      description: add data of placement page.
+      operationId: addPlacementData
+      requestBody:
+        required: true
+        description: add placement data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3 
+                mid:
+                  type: integer
+                  format: int64
+                  example: 1 
+                status:
+                  type: integer
+                  format: int64
+                  example: 0
+                name:
+                  type: string
+                  example: "Test_iOS Native Display 1200*628"
+                ad_show:
+                  type: integer
+                  format: int64
+                  description: options get from table:tab_online_style
+                  example: 202
+                markup:
+                  type: integer
+                  format: int64
+                  example: 40  
+                tmax:
+                  type: integer
+                  format: int64
+                  example: 400          
+                endpoint:
+                  type: string
+                  example: "https://ads.sdkadmobi.com/bidder/?posid=702001"
+                os:
+                  type: integer
+                  format: int64
+                  description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+                  example: 1  
+                ivt_strategy:
+                  type: integer
+                  format: int64
+                  description: 0=None(0) 1=Apply high IVT bundle to white bundle list(1)  2=Apply high IVT bundle to black bundle list(2) 
+                  example: 0            
+                style:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=Native 2=Banner 3=Video
+                  example: 1  
+                device_type:
+                  type: string
+                  description: multiple select. 1=Mobile/Tablet 2=Personal-Computer 3=Connected-TV 4=Phone 5=Tablet 6=Connected-Device 7=Set-TopBox
+                  example: "1|4|5"
+                tactical_filter:
+                  type: integer
+                  format: int64
+                  example: 1  
+                rate:
+                  type: integer
+                  format: int64
+                  example: 1 
+                white_dsp:
+                  type: string
+                  description: multiple select. Get dsp list.
+                  example: "1018|3067"
+                dsp_black:
+                  type: string
+                  description: multiple select. Get dsp list.
+                  example: "1018|3067"
+                qps:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      os:
+                        type: integer
+                        format: int64
+                        description: multiple select. 1=iOS 2=Android 4=CTV 5=Web
+                        example: 1  
+                      style:
+                        type: integer
+                        format: int64
+                        description: multiple select. 1=Native 2=Banner 3=Video
+                        example: 1  
+                      country:
+                        type: string
+                        description: multiple select. Get frome table:tab_cn_code
+                        example: "AR"
+                      qps:
+                        type: integer
+                        format: int64
+                        description: 100-999
+                        example: 100  
+                bidfloor:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      style:
+                        type: integer
+                        format: int64
+                        description: multiple select. 1=Native 2=Banner 3=Video
+                        example: 1  
+                      country:
+                        type: string
+                        description: multiple select. Get frome table:tab_cn_code
+                        example: "AR"
+                      floor:
+                        type: number
+                        description: grater than 0.01
+                        example: 0.1
+                floorratio:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      apply_to_all:
+                        type: integer
+                        format: int64
+                        description: 0=no 1=yes
+                        example: 1  
+                      bundle:
+                        type: string
+                        example: "345002|www.ggg.com"
+                      floor_ratio:
+                        type: integer
+                        format: int64
+                        description: grater than 0
+                        example: 1  
+                poscap:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      style:
+                        type: integer
+                        format: int64
+                        description: 1=Native 2=Banner 3=Video
+                        example: 1  
+                      cap:
+                        type: number
+                        description: grater than 0.01
+                        example: 0.01
+                white_pkg:
+                  type: string
+                  example: "345002|www.ggg.com"
+                black_pkg:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      seller_id:
+                        type: string
+                        example: "950"
+                      bundle:
+                        type: string
+                        example: "345002|www.ggg.com"
+                white_pkg_ivt:
+                  type: string
+                  example: "345002|www.ggg.com"
+                black_pkg_ivt:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      seller_id:
+                        type: string
+                        example: "950"
+                      bundle:
+                        type: string
+                        example: "345002|www.ggg.com"
+                allowance:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      style:
+                        type: integer
+                        format: int64
+                        description: multiple select. 1=Native 2=Banner 3=Video
+                        example: 1  
+                      country:
+                        type: string
+                        description: multiple select. Get frome table:tab_cn_code
+                        example: "AR"
+                      bid_price:
+                        type: number
+                        description: grater than 0.01
+                        example: 0.1
+                      daily_limit: 
+                        type: integer
+                        format: int64
+                        description: grater than 0
+                        example: 1  
+                pos_extra_info:  
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                        example: "test" 
+                      value:
+                        type: string
+                        description: split by |
+                        example: "123|123"
+                      description:
+                        type: string
+                        example: ""
+                bundle:
+                  type: string
+                  example: "tv.fourgtv.mobile"
+                offline_traffic:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1 
+                sdk_funnel_analysis:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1          
+                store_url:
+                  type: string
+                  description: url
+                  example: "https://play.google.com/store/apps/details?id=com.drawpoetry"
+                app_name:
+                  type: string
+                  example: "烘爐地求籤"
+                app_domain:
+                  type: string
+                  example: "www.medialinkstarx.com/"
+                test_mode:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1    
+                prebid_whiteops:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1 
+                postbid_protected_media:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1           
+                postbid_protected_media_sampling_ratio:
+                  type: integer
+                  format: int64
+                  description: 10~100%
+                  example: 100  
+                postbid_whiteops:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1  
+                postbid_whiteops_sampling_ratio:
+                  type: integer
+                  format: int64
+                  description: 10~100%
+                  example: 100  
+                postbid_pixalate:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1  
+                postbid_pixalate_sampling_ratio:
+                  type: integer
+                  format: int64
+                  description: 10~100%
+                  example: 100 
+                geoedge:
+                  type: integer
+                  description: 1=enable 0=disable
+                  format: int64
+                  example: 1 
+                geoedge_sampling_ratio:
+                  type: integer
+                  format: int64
+                  description: 10~100%
+                  example: 100 
+                geoedge_policy_key:
+                  type: string 
+                  example: ""  
+                instl:
+                  type: integer
+                  format: int64
+                  example: 1  
+                rewared_video:
+                  type: integer
+                  format: int64
+                  example: 1  
+                protocol:
+                  type: integer
+                  format: int64
+                  description: 2=VAST 2.0, 3=VAST 3.0, 5=VAST 2.0 Wrapper, 6=VAST 3.0 Wrapper, 7=VAST 4.0, 8=VAST 4.0 Wrapper, 11=VAST 4.1, 12=VAST 4.1 Wrapper 
+                  example: 2
+                min_ad_duration:
+                  type: integer
+                  format: int64
+                  description: 1 <= min_ad_duration <= 499
+                  example: 4
+                max_ad_duration:
+                  type: integer
+                  format: int64
+                  description: 2 <= max_ad_duration <= 500, max_ad_duration > min_ad_duration
+                  example: 5
+                maxbitrate:
+                  type: integer
+                  format: int64
+                  description: 50 <= maxbitrate <= 1000000
+                  example: 1 
+                assets:
+                  type: integer
+                  format: int64
+                  description: 1=Native display, 2=Native audio, 3=Native video
+                  example: 2
+                skippable:
+                  type: integer
+                  format: int64
+                  example: 1  
+                skip_offset:
+                  type: integer
+                  format: int64
+                  example: 5  
+                refresh_rate:
+                  type: integer
+                  format: int64
+                  example: 1  
+                refresh_rate_value:
+                  type: integer
+                  format: int64
+                  description: 5~120 sec
+                  example: 8
+                multiple_inventory_sizes:  
+                  type: integer
+                  format: int64
+                  description: options get from table:tab_online_style. Reference from https://thoughts.teambition.com/workspaces/5dd7993aa5bef30014692252/docs/6375cd8afb49bf0001ea2b62
+                  example: 50029
+                multiple_inventory_sizes_enable:  
+                  type: integer
+                  format: int64
+                  example: 0  
+                boxingallowed:  
+                  type: integer
+                  format: int64
+                  example: 1
+                updateTime:
+                  type: string 
+                  example: "2022-12-15 13:35:19"    
+              required:
+                - name
+                - mid    
+                - style
+                - ad_show
+                - markup
+                - os
+                - qps
+                - gid   
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/directpub/placement/delete:
+    post:
+      tags:
+        - base/directpub
+      description: Deletes placement data
+      operationId: deletePlacement
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/directpub/placement/update:
+    post:
+      tags:
+        - base/directpub
+      description: update data of placement page.
+      operationId: updatePlacementData
+      requestBody:
+        required: true
+        description: update placement data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Placement'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []      
+  /admin/base/ssp/inboundrcpm/page:
+    post:
+      tags:
+        - base/ssp
+      description: Page name is 'SSP Strategy' & 'Direct Pub Strategy'. Get data of ssp/direct pub strategy page. 
+      operationId: getInboundRCPMPage
+      requestBody:
+        required: true
+        description: inboundrcpm data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SSPInboundRCPM'
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/ssp/inboundrcpm/info:
+    get:
+      tags:
+        - base/ssp
+      description: Returns a single inboundrcpm data
+      operationId: getInboundRCPMDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of inboundrcpm to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSPInboundRCPM'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/ssp/inboundrcpm/add:
+    post:
+      tags:
+        - base/ssp
+      description: add data of ssp/direct pub page.
+      operationId: addInboundRCPMData
+      requestBody:
+        required: true
+        description: add inboundrcpm data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3
+                mid:
+                  type: string
+                  example: '105|987'  
+                type:
+                  type: string 
+                  description: ssp or direct
+                  example: "ssp"  
+                srcpm:
+                  type: number 
+                  description: 0.0001 ~ 5
+                  example: 0.0002 
+                ercpm:
+                  type: number 
+                  description: 0.0001 ~ 5. ercpm > srcpm
+                  example: 0.0005 
+                filter:
+                  type: integer
+                  format: int64
+                  description: 0-100%
+                  example: 30 
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/ssp/inboundrcpm/delete:
+    post:
+      tags:
+        - base/ssp
+      description: Deletes inboundrcpm data
+      operationId: deleteInboundRCPM
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/ssp/inboundrcpm/update:
+    post:
+      tags:
+        - base/ssp
+      description: update data of ssp/direct pub strategy page.
+      operationId: updateInboundRCPMData
+      requestBody:
+        required: true
+        description: update inbound rCPM data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SSPInboundRCPM'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []  
+  /admin/base/dsp/outboundrcpm/page:
+    post:
+      tags:
+        - base/dsp
+      description: Page name is 'DSP Strategy'. Get data of dsp strategy page. 
+      operationId: getOutboundRCPMPage
+      requestBody:
+        required: true
+        description: outboundrcpm data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DSPOutboundRCPM'
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/outboundrcpm/info:
+    get:
+      tags:
+        - base/dsp
+      description: Returns a single outboundrcpm data
+      operationId: getOutboundRCPMDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of outboundrcpm to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DSPOutboundRCPM'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/dsp/outboundrcpm/add:
+    post:
+      tags:
+        - base/dsp
+      description: add data of dsp page.
+      operationId: addOutboundRCPMData
+      requestBody:
+        required: true
+        description: add outboundrcpm data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3
+                dspid:
+                  type: string
+                  example: "3132|3128|3129"  
+                type:
+                  type: string 
+                  description: ssp or direct
+                  example: "ssp"  
+                srcpm:
+                  type: number 
+                  description: 0.0001 ~ 5
+                  example: 0.0002 
+                ercpm:
+                  type: number 
+                  description: 0.0001 ~ 5. ercpm > srcpm
+                  example: 0.0005 
+                sbidrate:
+                  type: number 
+                  description: 0.0001 ~ 5
+                  example: 0.0002 
+                ebidrate:
+                  type: number 
+                  description: 0.0001 ~ 5. ebidrate > sbidrate
+                  example: 0.0005 
+                filter:
+                  type: integer
+                  format: int64
+                  description: 0-100%
+                  example: 30 
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/outboundrcpm/delete:
+    post:
+      tags:
+        - base/dsp
+      description: Deletes outboundrcpm data
+      operationId: deleteOutboundRCPM
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/outboundrcpm/update:
+    post:
+      tags:
+        - base/dsp
+      description: update data of dsp strategy page.
+      operationId: updateOutboundRCPMData
+      requestBody:
+        required: true
+        description: update Outbound rCPM data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DSPOutboundRCPM'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
 components:
   schemas:
     captcha:
@@ -3193,7 +5352,1080 @@ components:
             example: "35"
           name:
             type: string
-            example: "35"      
+            example: "35" 
+    MediaList:
+        type: object
+        properties:
+          createTime: 
+            type: string
+            example: "2022-12-15 13:35:19"
+          mid: 
+            type: integer
+            format: int64
+            example: 1 
+          gid:
+            type: integer
+            format: int64
+            example: 3 
+          name:
+            type: string
+            example: "Smart Connect"
+          api:
+            type: integer
+            format: int64
+            description: 1=CUSTOMER 2=RTB2.3 3=RTB2.5
+            example: 1 
+          status:
+            type: integer
+            format: int64
+            example: 0
+          pubid:
+            type: integer
+            format: int64
+            example: 11
+          store_url:
+            type: string
+            example: "https://play.google.com/store/apps/details?id=com.ksmobile.launcher"            
+          bundle:
+            type: string
+            example: "com.ksmobile.launcher"
+          type:
+            type: integer
+            format: int64
+            description: 0=oRTB 1=Max JS Tag 2=Max VAST Wrapper 3=SDK 4=VAST AD Tag URI 5=GAM JS Tag 6=GAM VAST AD Tag URL
+            example: 0
+          os:
+            type: integer
+            format: int64
+            description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+            example: 1     
+          crid:
+            type: string
+            example: "1209_9524236|28466836276" 
+          level:
+            type: integer
+            format: int64
+            description: 1=A-Good Direct 2=B-Bad Diret 3=C-Good Pure SSP 4=D-Bad Pure SSP 5=E-Good Reseller SSP 6=F-Bad Reseller SSP
+            example: 1
+          company_type:
+            type: integer
+            format: int64
+            description: 0=oRTB 1=DIRECT.  Media List is 0. 
+            example: 0
+          block_ad_without_adomain:
+            type: integer
+            format: int64
+            example: 0
+          block_ad_without_crid:
+            type: integer
+            format: int64
+            example: 0    
+          block_domain:
+            type: string
+            example: "1209_9524236|28466836276" 
+          block_adm_domain:
+            type: string
+            example: "1209_9524236|28466836276" 
+          burl_field:
+            type: integer
+            format: int64
+            description: 0=Disable 1=Enable. Display if type = oRTB
+            example: 1           
+          updateTime:
+            type: string 
+            example: "2022-12-15 13:35:19"   
+        required:
+          - name
+          - os    
+          - company_type
+          - pubid
+          - type
+          - gid
+    Application:
+        type: object
+        properties:
+          createTime: 
+            type: string
+            example: "2022-12-15 13:35:19"
+          mid: 
+            type: integer
+            format: int64
+            example: 1 
+          gid:
+            type: integer
+            format: int64
+            example: 3 
+          name:
+            type: string
+            example: "Smart Connect"
+          api:
+            type: integer
+            format: int64
+            description: 1=CUSTOMER 2=RTB2.3 3=RTB2.5
+            example: 1 
+          status:
+            type: integer
+            format: int64
+            example: 0
+          pubid:
+            type: integer
+            format: int64
+            example: 11
+          store_url:
+            type: string
+            example: "https://play.google.com/store/apps/details?id=com.ksmobile.launcher"            
+          bundle:
+            type: string
+            example: "com.ksmobile.launcher"
+          type:
+            type: integer
+            format: int64
+            description: 0=oRTB, 1=Max JS Tag, 2=Max VAST Wrapper, 3=SDK, 4=VAST AD Tag URI, 5=GAM JS Tag, 6=GAM VAST AD Tag URL
+            example: 0
+          os:
+            type: integer
+            format: int64
+            description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+            example: 1     
+          crid:
+            type: string
+            example: "1209_9524236|28466836276" 
+          level:
+            type: integer
+            format: int64
+            description: Application is 1
+            example: 1
+          company_type:
+            type: integer
+            format: int64
+            description: 0=oRTB 1=DIRECT. Application is 1.
+            example: 1
+          block_ad_without_adomain:
+            type: integer
+            format: int64
+            example: 0
+          block_ad_without_crid:
+            type: integer
+            format: int64
+            example: 0    
+          block_domain:
+            type: string
+            example: "1209_9524236|28466836276" 
+          block_adm_domain:
+            type: string
+            example: "1209_9524236|28466836276" 
+          burl_field:
+            type: integer
+            format: int64
+            description: 0=Disable 1=Enable. Display if type = oRTB
+            example: 1         
+          app_domain:
+            type: string
+            example: "https://www.lucidpix.com/"
+          app_type:
+            type: integer
+            format: int64
+            description: 1=Owned & Operated 2=Non Owned & Operated
+            example: 1  
+          block_ad_without_category:
+            type: integer
+            format: int64
+            example: 0
+          block_category:  
+            type: string
+            description: multiple select.
+            example: "IAB1|IAB1-1" 
+          updateTime:
+            type: string 
+            example: "2022-12-15 13:35:19"   
+        required:
+          - name
+          - os    
+          - company_type
+          - pubid
+          - type   
+          - gid
+    MediaPosid:   
+        type: object
+        properties:  
+          createTime: 
+            type: string
+            example: "2022-12-15 13:35:19"
+          posid: 
+            type: integer
+            format: int64
+            example: 1 
+          gid:
+            type: integer
+            format: int64
+            example: 3 
+          mid:
+            type: integer
+            format: int64
+            example: 1 
+          status:
+            type: integer
+            format: int64
+            example: 0
+          name:
+            type: string
+            example: "Test_iOS Native Display 1200*628"
+          ad_show:
+            type: integer
+            format: int64
+            description: options get from table:tab_online_style
+            example: 202
+          markup:
+            type: integer
+            format: int64
+            example: 40  
+          tmax:
+            type: integer
+            format: int64
+            example: 400          
+          endpoint:
+            type: string
+            example: "https://ads.sdkadmobi.com/bidder/?posid=702001"
+          os:
+            type: integer
+            format: int64
+            description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+            example: 1  
+          ivt_strategy:
+            type: integer
+            format: int64
+            description: 0=None(0) 1=Apply high IVT bundle to white bundle list(1)  2=Apply high IVT bundle to black bundle list(2) 
+            example: 0            
+          style:
+            type: integer
+            format: int64
+            description: multiple select. 1=Native 2=Banner 3=Video
+            example: 1  
+          device_type:
+            type: string
+            description: multiple select. 1=Mobile/Tablet 2=Personal-Computer 3=Connected-TV 4=Phone 5=Tablet 6=Connected-Device 7=Set-TopBox
+            example: "1|4|5"
+          tactical_filter:
+            type: integer
+            format: int64
+            example: 1  
+          rate:
+            type: integer
+            format: int64
+            example: 1 
+          white_dsp:
+            type: string
+            description: multiple select. Get dsp list.
+            example: "1018|3067"
+          dsp_black:
+            type: string
+            description: multiple select. Get dsp list.
+            example: "1018|3067"
+          qps:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                os:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=iOS 2=Android 4=CTV 5=Web
+                  example: 1  
+                style:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=Native 2=Banner 3=Video
+                  example: 1  
+                country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code
+                  example: "AR"
+                qps:
+                  type: integer
+                  format: int64
+                  description: 100-999
+                  example: 100  
+          bidfloor:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                style:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=Native 2=Banner 3=Video
+                  example: 1  
+                country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code
+                  example: "AR"
+                floor:
+                  type: number
+                  description: grater than 0.01
+                  example: 0.1
+          floorratio:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                apply_to_all:
+                  type: integer
+                  format: int64
+                  description: 0=no 1=yes
+                  example: 1  
+                bundle:
+                  type: string
+                  example: "345002|www.ggg.com"
+                floor_ratio:
+                  type: integer
+                  format: int64
+                  description: grater than 0
+                  example: 1  
+          poscap:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                style:
+                  type: integer
+                  format: int64
+                  description: 1=Native 2=Banner 3=Video
+                  example: 1  
+                cap:
+                  type: number
+                  description: grater than 0.01
+                  example: 0.01
+          white_pkg:
+            type: string
+            example: "345002|www.ggg.com"
+          black_pkg:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                seller_id:
+                  type: string
+                  example: "950"
+                bundle:
+                  type: string
+                  example: "345002|www.ggg.com"
+          white_pkg_ivt:
+            type: string
+            example: "345002|www.ggg.com"
+          black_pkg_ivt:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                seller_id:
+                  type: string
+                  example: "950"
+                bundle:
+                  type: string
+                  example: "345002|www.ggg.com"
+          allowance:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                style:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=Native 2=Banner 3=Video
+                  example: 1  
+                country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code
+                  example: "AR"
+                bid_price:
+                  type: number
+                  description: grater than 0.01
+                  example: 0.1
+                daily_limit: 
+                  type: integer
+                  format: int64
+                  description: grater than 0
+                  example: 1  
+          pos_extra_info:  
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                key:
+                  type: string
+                  example: "test" 
+                value:
+                  type: string
+                  description: split by |
+                  example: "123|123"
+                description:
+                  type: string
+                  example: ""
+          bundle:
+            type: string
+            example: "tv.fourgtv.mobile"
+          offline_traffic:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1 
+          sdk_funnel_analysis:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1          
+          store_url:
+            type: string
+            description: url
+            example: "https://play.google.com/store/apps/details?id=com.drawpoetry"
+          app_name:
+            type: string
+            example: "烘爐地求籤"
+          app_domain:
+            type: string
+            example: "www.medialinkstarx.com/"
+          test_mode:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1    
+          prebid_whiteops:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1 
+          postbid_protected_media:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1           
+          postbid_protected_media_sampling_ratio:
+            type: integer
+            format: int64
+            description: 10~100%
+            example: 100  
+          postbid_whiteops:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1  
+          postbid_whiteops_sampling_ratio:
+            type: integer
+            format: int64
+            description: 10~100%
+            example: 100  
+          postbid_pixalate:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1  
+          postbid_pixalate_sampling_ratio:
+            type: integer
+            format: int64
+            description: 10~100%
+            example: 100 
+          geoedge:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1 
+          geoedge_sampling_ratio:
+            type: integer
+            format: int64
+            description: 10~100%
+            example: 100 
+          geoedge_policy_key:
+            type: string 
+            example: ""  
+          updateTime:
+            type: string 
+            example: "2022-12-15 13:35:19"    
+        required:
+          - name
+          - mid    
+          - style
+          - ad_show
+          - markup
+          - os
+          - qps
+          - gid    
+    Placement:   
+        type: object
+        properties:  
+          createTime: 
+            type: string
+            example: "2022-12-15 13:35:19"
+          posid: 
+            type: integer
+            format: int64
+            example: 1 
+          gid:
+            type: integer
+            format: int64
+            example: 3 
+          mid:
+            type: integer
+            format: int64
+            example: 1 
+          status:
+            type: integer
+            format: int64
+            example: 0
+          name:
+            type: string
+            example: "Test_iOS Native Display 1200*628"
+          ad_show:
+            type: integer
+            format: int64
+            description: options get from table:tab_online_style
+            example: 202
+          markup:
+            type: integer
+            format: int64
+            example: 40  
+          tmax:
+            type: integer
+            format: int64
+            example: 400          
+          endpoint:
+            type: string
+            example: "https://ads.sdkadmobi.com/bidder/?posid=702001"
+          os:
+            type: integer
+            format: int64
+            description: 1=iOS 2=Android 3=All 4=CTV 5=Web
+            example: 1  
+          ivt_strategy:
+            type: integer
+            format: int64
+            description: 0=None(0) 1=Apply high IVT bundle to white bundle list(1)  2=Apply high IVT bundle to black bundle list(2) 
+            example: 0            
+          style:
+            type: integer
+            format: int64
+            description: multiple select. 1=Native 2=Banner 3=Video
+            example: 1  
+          device_type:
+            type: string
+            description: multiple select. 1=Mobile/Tablet 2=Personal-Computer 3=Connected-TV 4=Phone 5=Tablet 6=Connected-Device 7=Set-TopBox
+            example: "1|4|5"
+          tactical_filter:
+            type: integer
+            format: int64
+            example: 1  
+          rate:
+            type: integer
+            format: int64
+            example: 1 
+          white_dsp:
+            type: string
+            description: multiple select. Get dsp list.
+            example: "1018|3067"
+          dsp_black:
+            type: string
+            description: multiple select. Get dsp list.
+            example: "1018|3067"
+          qps:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                os:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=iOS 2=Android 4=CTV 5=Web
+                  example: 1  
+                style:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=Native 2=Banner 3=Video
+                  example: 1  
+                country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code
+                  example: "AR"
+                qps:
+                  type: integer
+                  format: int64
+                  description: 100-999
+                  example: 100  
+          bidfloor:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                style:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=Native 2=Banner 3=Video
+                  example: 1  
+                country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code
+                  example: "AR"
+                floor:
+                  type: number
+                  description: grater than 0.01
+                  example: 0.1
+          floorratio:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                apply_to_all:
+                  type: integer
+                  format: int64
+                  description: 0=no 1=yes
+                  example: 1  
+                bundle:
+                  type: string
+                  example: "345002|www.ggg.com"
+                floor_ratio:
+                  type: integer
+                  format: int64
+                  description: grater than 0
+                  example: 1  
+          poscap:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                style:
+                  type: integer
+                  format: int64
+                  description: 1=Native 2=Banner 3=Video
+                  example: 1  
+                cap:
+                  type: number
+                  description: grater than 0.01
+                  example: 0.01
+          white_pkg:
+            type: string
+            example: "345002|www.ggg.com"
+          black_pkg:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                seller_id:
+                  type: string
+                  example: "950"
+                bundle:
+                  type: string
+                  example: "345002|www.ggg.com"
+          white_pkg_ivt:
+            type: string
+            example: "345002|www.ggg.com"
+          black_pkg_ivt:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                seller_id:
+                  type: string
+                  example: "950"
+                bundle:
+                  type: string
+                  example: "345002|www.ggg.com"
+          allowance:
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                style:
+                  type: integer
+                  format: int64
+                  description: multiple select. 1=Native 2=Banner 3=Video
+                  example: 1  
+                country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code
+                  example: "AR"
+                bid_price:
+                  type: number
+                  description: grater than 0.01
+                  example: 0.1
+                daily_limit: 
+                  type: integer
+                  format: int64
+                  description: grater than 0
+                  example: 1  
+          pos_extra_info:  
+            type: array
+            items:
+              type: object
+              properties:
+                id:
+                  type: integer
+                  format: int64
+                  example: 1 
+                posid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+                key:
+                  type: string
+                  example: "test" 
+                value:
+                  type: string
+                  description: split by |
+                  example: "123|123"
+                description:
+                  type: string
+                  example: ""
+          bundle:
+            type: string
+            example: "tv.fourgtv.mobile"
+          offline_traffic:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1 
+          sdk_funnel_analysis:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1          
+          store_url:
+            type: string
+            description: url
+            example: "https://play.google.com/store/apps/details?id=com.drawpoetry"
+          app_name:
+            type: string
+            example: "烘爐地求籤"
+          app_domain:
+            type: string
+            example: "www.medialinkstarx.com/"
+          test_mode:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1    
+          prebid_whiteops:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1 
+          postbid_protected_media:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1           
+          postbid_protected_media_sampling_ratio:
+            type: integer
+            format: int64
+            description: 10~100%
+            example: 100  
+          postbid_whiteops:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1  
+          postbid_whiteops_sampling_ratio:
+            type: integer
+            format: int64
+            description: 10~100%
+            example: 100  
+          postbid_pixalate:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1  
+          postbid_pixalate_sampling_ratio:
+            type: integer
+            format: int64
+            description: 10~100%
+            example: 100 
+          geoedge:
+            type: integer
+            description: 1=enable 0=disable
+            format: int64
+            example: 1 
+          geoedge_sampling_ratio:
+            type: integer
+            format: int64
+            description: 10~100%
+            example: 100 
+          geoedge_policy_key:
+            type: string 
+            example: ""  
+          instl:
+            type: integer
+            format: int64
+            example: 1  
+          rewared_video:
+            type: integer
+            format: int64
+            example: 1  
+          protocol:
+            type: integer
+            format: int64
+            description: 2=VAST 2.0, 3=VAST 3.0, 5=VAST 2.0 Wrapper, 6=VAST 3.0 Wrapper, 7=VAST 4.0, 8=VAST 4.0 Wrapper, 11=VAST 4.1, 12=VAST 4.1 Wrapper 
+            example: 2
+          min_ad_duration:
+            type: integer
+            format: int64
+            description: 1 <= min_ad_duration <= 499
+            example: 4
+          max_ad_duration:
+            type: integer
+            format: int64
+            description: 2 <= max_ad_duration <= 500, max_ad_duration > min_ad_duration
+            example: 5
+          maxbitrate:
+            type: integer
+            format: int64
+            description: 50 <= maxbitrate <= 1000000
+            example: 1 
+          assets:
+            type: integer
+            format: int64
+            description: 1=Native display, 2=Native audio, 3=Native video
+            example: 2
+          skippable:
+            type: integer
+            format: int64
+            example: 1  
+          skip_offset:
+            type: integer
+            format: int64
+            example: 5  
+          refresh_rate:
+            type: integer
+            format: int64
+            example: 1  
+          refresh_rate_value:
+            type: integer
+            format: int64
+            description: 5~120 sec
+            example: 8
+          multiple_inventory_sizes:  
+            type: integer
+            format: int64
+            description: options get from table:tab_online_style. Reference from https://thoughts.teambition.com/workspaces/5dd7993aa5bef30014692252/docs/6375cd8afb49bf0001ea2b62
+            example: 50029
+          multiple_inventory_sizes_enable:  
+            type: integer
+            format: int64
+            example: 0  
+          boxingallowed:  
+            type: integer
+            format: int64
+            example: 1          
+          updateTime:
+            type: string 
+            example: "2022-12-15 13:35:19"   
+        required:
+          - name
+          - os    
+          - company_type
+          - pubid
+          - type   
+          - gid   
+    SSPInboundRCPM:   
+      type: object
+      description: tablename:tab_ssp_inbound_rcpm
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        id:  
+          type: integer
+          format: int64
+          example: 1  
+        mid:
+          type: string
+          example: '105|978'  
+        type:
+          type: string 
+          description: ssp or direct
+          example: "ssp"  
+        srcpm:
+          type: number 
+          description: 0.0001 ~ 5
+          example: 0.0002 
+        ercpm:
+          type: number 
+          description: 0.0001 ~ 5. ercpm > srcpm
+          example: 0.0005 
+        filter:
+          type: integer
+          format: int64
+          description: 0-100%
+          example: 30 
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19"   
+    DSPOutboundRCPM:   
+      type: object
+      description: tablename:tab_dsp_outbound_rcpm
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        id:  
+          type: integer
+          format: int64
+          example: 1  
+        dspid:
+          type: string
+          example: "3132|3128|3129"  
+        type:
+          type: string 
+          description: ssp or direct
+          example: "ssp"  
+        srcpm:
+          type: number 
+          description: 0.0001 ~ 5
+          example: 0.0002 
+        ercpm:
+          type: number 
+          description: 0.0001 ~ 5. ercpm > srcpm
+          example: 0.0005 
+        sbidrate:
+          type: number 
+          description: 0.0001 ~ 5
+          example: 0.0002 
+        ebidrate:
+          type: number 
+          description: 0.0001 ~ 5. ebidrate > sbidrate
+          example: 0.0005 
+        filter:
+          type: integer
+          format: int64
+          description: 0-100%
+          example: 30 
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19" 
   securitySchemes:
     bearerAuth:
       type: http
