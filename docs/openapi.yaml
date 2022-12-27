@@ -5,7 +5,7 @@ info:
     技术框架：
     
     前端 https://github.com/cool-team-official/cool-admin-vue
-    - 1. 支持多语言
+    - 1. 支持多语言(請參考文件裡的字串表active.en.json)
     - 2. eps功能與cool框架的相依性高, 請自行評估是否保留
     
     後端 https://github.com/cool-team-official/cool-admin-go 
@@ -20,6 +20,7 @@ info:
     Github:
     - 前端: https://github.com/ML-SSP/adx_website.git
     - 後端: https://github.com/ML-SSP/adx_api_server.git
+    - 文件: https://github.com/ML-SSP/adx-api-docs.git
     
     功能需求：
     - 1. system
@@ -48,7 +49,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.3
+  version: 1.0.4
 servers:
   - url: https://realtimebidding.medialink-x.com/dev
 tags:
@@ -2813,6 +2814,7 @@ paths:
                 pubid:
                   type: integer
                   format: int64
+                  description: Label for company. 
                   example: 11
                 store_url:
                   type: string
@@ -4725,7 +4727,7 @@ paths:
     post:
       tags:
         - base/dsp
-      description: add data of dsp page.
+      description: add data of dsp strategy page.
       operationId: addOutboundRCPMData
       requestBody:
         required: true
@@ -4857,6 +4859,1317 @@ paths:
           description: Invalid tag value  
       security:
         - bearerAuth: []
+  /admin/base/dsp/dsplist/page:
+    post:
+      tags:
+        - base/dsp
+      description: Page name is 'DSP List'. Get data of dsp list page. 
+      operationId: getDspListPage
+      requestBody:
+        required: true
+        description: dsp list data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19" 
+                            dspid:
+                              type: integer
+                              format: int64
+                              example: 3132  
+                            customer:
+                              type: integer
+                              format: int64
+                              description: Get data from tab_company_info
+                              example: 3132  
+                            status:
+                              type: integer
+                              format: int64
+                              description: 1=enable 0=disable
+                              example: 1
+                            name:
+                              type: string
+                              example: "Tappx_ios"
+                            updateTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19" 
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/dsplist/info:
+    get:
+      tags:
+        - base/dsp
+      description: Returns a single dsp list data
+      operationId: getDspListDataById
+      parameters:
+        - name: dspid
+          in: query
+          description: ID of dsp list to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DspList'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/dsp/dsplist/add:
+    post:
+      tags:
+        - base/dsp
+      description: add data of dsp list page.
+      operationId: addDspListData
+      requestBody:
+        required: true
+        description: add dsp list data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3
+                customer:
+                  type: integer
+                  format: int64
+                  description: Get data from tab_company_info
+                  example: 3132  
+                status:
+                  type: integer
+                  format: int64
+                  description: 1=enable 0=disable
+                  example: 1
+                name:
+                  type: string
+                  example: "Tappx_ios"
+                endpoint:
+                  type: string
+                  example: "http://ssp.api.tappx.com/rtb/2.3.1/ZZ19173CHEE1504800233?appkey=Pub-36127-iOS-5876"
+                tmax:
+                  type: integer
+                  format: int64
+                  description: 0 < tmax < 150
+                  example: 20 
+                api_type:
+                  type: integer
+                  format: int64
+                  description: 1=CUSTOMER 2=RTB2.3 3=RTB2.5
+                  example: 1 
+                auc_type:
+                  type: integer
+                  format: int64
+                  description: 1=GFP 2=GSP
+                  example: 1 
+                win_type:
+                  type: integer
+                  format: int64
+                  description: 1=CLOSE_WIN 2=SEND_BY_SERVER 3=SEND_WITH_IMPRESSION
+                  example: 1 
+                burl_type:
+                  type: integer
+                  format: int64
+                  description: 0=Fired by server-side 1=Fired by client-side
+                  example: 1 
+                gzip:
+                  type: integer
+                  format: int64
+                  description: 1=enable 0=disable
+                  example: 0
+                schain:
+                  type: integer
+                  format: int64
+                  description: 1=enable 0=disable
+                  example: 0
+                enable_userate:
+                  type: integer
+                  format: int64
+                  example: 0
+                use_rate:
+                  type: integer
+                  format: int64
+                  description: 0~100
+                  example: 0
+                impression_mode:
+                  type: integer
+                  format: int64
+                  description: 0=default 1=interactive 
+                  example: 0
+                black_offline_bundle:
+                  type: integer
+                  format: int64
+                  description: 1=enable 0=disable
+                  example: 0
+                increase_markup_to_high_ivt_bundle:
+                  type: integer
+                  format: int64
+                  description: 1=enable 0=disable
+                  example: 0
+                cap:
+                  type: array
+                  description: insert into tab_dsp_cap
+                  items:
+                    type: object
+                    properties:
+                      mid:
+                          type: integer
+                          format: int64
+                          example: 105
+                      style:
+                          type: integer
+                          format: int64
+                          description: 1=Native 2=Banner 3=Video
+                          example: 1  
+                      hourly_cap:
+                          type: number
+                          description: 0=Daily 1=Hourly
+                          example: 0
+                      cap:
+                          type: number
+                          description: greater than 0
+                          example: 0
+                  required:
+                    - cap
+                bundle_cap:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      country:
+                          type: string
+                          description: multiple select. Get frome table:tab_cn_code
+                          example: "AR"
+                      bundle:
+                          type: string
+                          description: split by "|"
+                          example: "123|xxx"
+                      cap:
+                          type: number
+                          example: 0
+                qps:          
+                  type: array
+                  description: insert into tab_dsp_qps
+                  items:
+                    type: object
+                    properties:
+                      style:
+                          type: string
+                          description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                          example: "1|2" 
+                      os:
+                          type: string
+                          description: multiple select. 1=iOS 2=Android 4=CTV 5=Web split by "|".
+                          example: 1053 
+                      country:
+                          type: string
+                          description: multiple select. Get frome table:tab_cn_code. split by "|".
+                          example: "AR"
+                      qps:
+                          type: number
+                          example: 0
+                  required:
+                    - qps
+                price:
+                  type: array
+                  description: insert into tab_dsp_price
+                  items:
+                    type: object
+                    properties:
+                      style:
+                          type: string
+                          description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                          example: "1|2" 
+                      country:
+                          type: string
+                          description: multiple select. Get frome table:tab_cn_code. split by "|".
+                          example: "AR"
+                      min_price:
+                          type: number
+                          description: step=0.01. greater than 0.
+                          example: 0
+                      max_price:
+                          type: number
+                          description: step=0.01. greater than 0.
+                          example: 0
+                floor_ratio:
+                  type: array
+                  description: insert into tab_dsp_floor_ratio
+                  items:
+                    type: object
+                    properties:
+                      mid:
+                          type: string
+                          description: multiple select. Get data from tab_online_mid. split by "|".
+                          example: 1053     
+                      style:
+                          type: string
+                          description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                          example: "1|2" 
+                      country:
+                          type: string
+                          description: multiple select. Get frome table:tab_cn_code. split by "|".
+                          example: "AR"
+                      floor_ratio:
+                          type: integer
+                          format: int64
+                          description: greater than 0 
+                          example: 50 
+                      daily_allowance_limit:
+                          type: integer
+                          format: int64
+                          description: 0~1000 
+                          example: 50 
+                  required:
+                    - mid
+                    - style    
+                    - country
+                    - floor_ratio
+                bundle_markup:
+                  type: array
+                  description: insert into tab_dsp_info
+                  items:
+                    type: object
+                    properties:
+                      mid:
+                          type: integer
+                          format: int64
+                          example: 105
+                      markup:
+                          type: integer
+                          format: int64
+                          example: 10
+                      bundle:
+                          type: string
+                          description: split by "|"
+                          example: "123|xxx"
+                  required:
+                    - markup    
+                ext:
+                  type: string
+                  example: ""
+                whiteops_prebid_block:
+                  type: integer
+                  format: int64
+                  description: 1=enable 0=disable
+                  example: 0
+              required:
+                - customer
+                - name
+                - endpoint
+                - api_type
+                - auc_type
+                - win_type
+                - burl_type
+                - qps
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/dsplist/delete:
+    post:
+      tags:
+        - base/dsp
+      description: Deletes dsp list data
+      operationId: deleteDspList
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/dsplist/update:
+    post:
+      tags:
+        - base/dsp
+      description: update data of dsp list page.
+      operationId: updateDspListData
+      requestBody:
+        required: true
+        description: update dsp list data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DspList'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/dsptarget/page:
+    post:
+      tags:
+        - base/dsp
+      description: Page name is 'DSP Target'. Get data of dsp target page. 
+      operationId: getDspTargetPage
+      requestBody:
+        required: true
+        description: dsp target data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19" 
+                            dspid:
+                              type: integer
+                              format: int64
+                              example: 3132  
+                            adsetid:
+                              type: integer
+                              format: int64
+                              example: 3132
+                            status:
+                              type: integer
+                              format: int64
+                              description: get dsp status.
+                              example: 1
+                            updateTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19" 
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/dsptarget/info:
+    get:
+      tags:
+        - base/dsp
+      description: Returns a single dsp target data
+      operationId: getDspTargetDataById
+      parameters:
+        - name: dspid
+          in: query
+          description: ID of dsp Target to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DspTarget'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/dsp/dsptarget/add:
+    post:
+      tags:
+        - base/dsp
+      description: add data of dsp target page.
+      operationId: addDspTargetData
+      requestBody:
+        required: true
+        description: add dsp target data body
+        content:
+          application/json:
+            schema:
+              type: object
+              description: tablename:tab_dsp_adset
+              properties:  
+                dspid:
+                  type: integer
+                  format: int64
+                  description: Get date from tab_dsp_list.
+                  example: 3014 
+                protocol:
+                  type: integer
+                  format: int64
+                  description: 1=DSP_OPEN_AUCTION. Always set 1.
+                  example: 1
+                os:
+                  type: string
+                  description: multiple select. 1=iOS 2=Android 4=CTV 5=Web split by "|".
+                  example: 1053 
+                style:
+                  type: string
+                  description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                  example: "1|2" 
+                video_type:
+                  type: integer
+                  format: int64
+                  description: 1=skippable 2=non-skippable 3=all. 
+                  example: 1 
+                country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code. split by "|".
+                  example: "AR"
+                size:
+                  type: string
+                  description: multiple select. Options=> 1024_768, 1200_627, 1200_800, 1200_900, 1280_700, 180_120, 2194_1755, 300_250, 320_480, 320_50, 344_194, 480_320, 480_360, 728_90, 768_1024. split by "|".
+                  example: "1024_768|1200_627" 
+                skanid:
+                  type: string
+                  example: "zq492l623r.skadnetwork"
+                idfa_consent_filter:
+                  type: integer
+                  format: int64
+                  example: 1 
+                bidprice_weight:
+                  type: number
+                  description: step=0.1, 0.7~1.0
+                  example: 0.7
+                pos_white:
+                  type: string
+                  description: Get data from tab_online_pos
+                  example: "131001|131002"
+                pos_black:
+                  type: string
+                  description: Get data from tab_online_pos
+                  example: "131001|131002"
+                pkgwhite:
+                  type: array
+                  description: insert into tab_dsp_adset_pkgwhite
+                  items:
+                    type: object
+                    properties:
+                      dspid:
+                        type: integer
+                        format: int64
+                        example: 1053 
+                      mid:
+                        type: string
+                        description: Get data from tab_online_mid.
+                        example: 1053    
+                      bundle:
+                        type: string
+                        description: split by "|".
+                        example: 
+                      style:
+                        type: integer
+                        format: int64
+                        description: 0=null 1=Native 2=Banner 3=Video.
+                        example: 0
+                    required:
+                      - bundle
+                pkgblack_ivt:
+                  type: array
+                  description: insert into tab_dsp_adset_pkgblack
+                  items:
+                    type: object
+                    properties:
+                      dspid:
+                        type: integer
+                        format: int64
+                        example: 1053 
+                      mid:
+                        type: string
+                        description: Get data from tab_online_mid.
+                        example: 1053    
+                      bundle:
+                        type: string
+                        description: split by "|".
+                        example: 
+                      style:
+                        type: integer
+                        format: int64
+                        description: 0=null 1=Native 2=Banner 3=Video.
+                        example: 0
+                      type:
+                        type: integer
+                        format: int64
+                        description: Always set 0
+                        example: 0 
+                    required:
+                      - bundle
+                pkgblack_whiteops:
+                  type: array
+                  description: insert into tab_dsp_adset_pkgblack
+                  items:
+                    type: object
+                    properties:
+                      dspid:
+                        type: integer
+                        format: int64
+                        example: 1053 
+                      mid:
+                        type: string
+                        description: Get data from tab_online_mid.
+                        example: 1053    
+                      bundle:
+                        type: string
+                        description: split by "|".
+                        example: 
+                      style:
+                        type: integer
+                        format: int64
+                        description: 0=null 1=Native 2=Banner 3=Video.
+                        example: 0
+                      type:
+                        type: integer
+                        format: int64
+                        description: Always set 2
+                        example: 2 
+                    required:
+                      - bundle
+                pkgblack_op:
+                  type: array
+                  description: insert into tab_dsp_adset_pkgblack
+                  items:
+                    type: object
+                    properties:
+                      dspid:
+                        type: integer
+                        format: int64
+                        example: 1053 
+                      mid:
+                        type: string
+                        description: Get data from tab_online_mid.
+                        example: 1053    
+                      bundle:
+                        type: string
+                        description: split by "|".
+                        example: 
+                      style:
+                        type: integer
+                        format: int64
+                        description: 0=null 1=Native 2=Banner 3=Video.
+                        example: 0
+                      type:
+                        type: integer
+                        format: int64
+                        description: Always set 1
+                        example: 1
+                    required:
+                      - bundle
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3  
+                updateTime:
+                  type: string 
+                  example: "2022-12-15 13:35:19" 
+              required:
+                - dspid
+                - os
+                - style  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/dsptarget/delete:
+    post:
+      tags:
+        - base/dsp
+      description: Deletes dsp target data
+      operationId: deleteDspTarget
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/dsptarget/update:
+    post:
+      tags:
+        - base/dsp
+      description: update data of dsp target page.
+      operationId: updateDspTargetData
+      requestBody:
+        required: true
+        description: update dsp target data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DspTarget'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/dsptagid/page:
+    post:
+      tags:
+        - base/dsp
+      description: Page name is 'DSP TagID'. Get data of dsp tagid page. 
+      operationId: getDspTagidPage
+      requestBody:
+        required: true
+        description: dsp tagid data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DspTagID'
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/dsptagid/info:
+    get:
+      tags:
+        - base/dsp
+      description: Returns a single dsp tagid data
+      operationId: getDspTagidDataById
+      parameters:
+        - name: dspid
+          in: query
+          description: ID of dsp Tagid to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DspTagID'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/dsp/dsptagid/add:
+    post:
+      tags:
+        - base/dsp
+      description: add data of dsp tagid page.
+      operationId: addDspTagidData
+      requestBody:
+        required: true
+        description: add dsp tagid data body
+        content:
+          application/json:
+            schema:
+              type: object
+              description: tablename:tab_dsp_adset
+              properties:  
+                tagid:
+                  type: integer
+                  format: int64
+                  example: 101
+                dspid:
+                  type: string
+                  description: multiple select. Get date from tab_dsp_list. split by "|".
+                  example: "3014|2313" 
+                os:
+                  type: string
+                  description: 1=iOS 2=Android 4=CTV 5=Web.
+                  example: 1053 
+                style:
+                  type: string
+                  description: 1=Native 2=Banner 3=Video.
+                  example: 1 
+                video_type:
+                  type: integer
+                  format: int64
+                  description:  0=normal 1=reward. init=> empty option
+                  example: 0
+                bundle:
+                  type: string
+                  description: split by "|".
+                  example: "123|xx"
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3  
+              required:
+                - tagid
+                - dspid
+                - os
+                - bundle  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/dsptagid/delete:
+    post:
+      tags:
+        - base/dsp
+      description: Deletes dsp tagid data
+      operationId: deleteDspTagid
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/dsptagid/update:
+    post:
+      tags:
+        - base/dsp
+      description: update data of dsp tagid page.
+      operationId: updateDspTagidData
+      requestBody:
+        required: true
+        description: update dsp tagid data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DspTagID'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/dspappid/page:
+    post:
+      tags:
+        - base/dsp
+      description: Page name is 'DSP AppID'. Get data of dsp appid page. 
+      operationId: getDspAppidPage
+      requestBody:
+        required: true
+        description: dsp appid data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DspAppID'
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/dspappid/info:
+    get:
+      tags:
+        - base/dsp
+      description: Returns a single dsp appid data
+      operationId: getDspAppidDataById
+      parameters:
+        - name: dspid
+          in: query
+          description: ID of dsp Appid to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DspAppID'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/dsp/dspappid/add:
+    post:
+      tags:
+        - base/dsp
+      description: add data of dsp appid page.
+      operationId: addDspAppidData
+      requestBody:
+        required: true
+        description: add dsp appid data body
+        content:
+          application/json:
+            schema:
+              type: object
+              description: tablename:tab_dsp_adset
+              properties:  
+                appid:
+                  type: integer
+                  format: int64
+                  example: 101
+                dspid:
+                  type: string
+                  description: multiple select. Get date from tab_dsp_list. split by "|".
+                  example: "3014|2313" 
+                bundle:
+                  type: string
+                  description: split by "|".
+                  example: "123|xx"
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3  
+              required:
+                - dspid
+                - appid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/dspappid/delete:
+    post:
+      tags:
+        - base/dsp
+      description: Deletes dsp appid data
+      operationId: deleteDspAppid
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/dspappid/update:
+    post:
+      tags:
+        - base/dsp
+      description: update data of dsp appid page.
+      operationId: updateDspAppidData
+      requestBody:
+        required: true
+        description: update dsp appid data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DspAppID'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []  
 components:
   schemas:
     captcha:
@@ -6426,6 +7739,596 @@ components:
         updateTime:
           type: string 
           example: "2022-12-15 13:35:19" 
+    DspList:   
+      type: object
+      description: tablename:tab_dsp_list
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        dspid:
+          type: integer
+          format: int64
+          example: 3132  
+        customer:
+          type: integer
+          format: int64
+          description: Get data from tab_company_info
+          example: 3132  
+        status:
+          type: integer
+          format: int64
+          description: 1=enable 0=disable
+          example: 1
+        name:
+          type: string
+          example: "Tappx_ios"
+        endpoint:
+          type: string
+          example: "http://ssp.api.tappx.com/rtb/2.3.1/ZZ19173CHEE1504800233?appkey=Pub-36127-iOS-5876"
+        tmax:
+          type: integer
+          format: int64
+          description: 0 < tmax < 150
+          example: 20 
+        api_type:
+          type: integer
+          format: int64
+          description: 1=CUSTOMER 2=RTB2.3 3=RTB2.5
+          example: 1 
+        auc_type:
+          type: integer
+          format: int64
+          description: 1=GFP 2=GSP
+          example: 1 
+        win_type:
+          type: integer
+          format: int64
+          description: 1=CLOSE_WIN 2=SEND_BY_SERVER 3=SEND_WITH_IMPRESSION
+          example: 1 
+        burl_type:
+          type: integer
+          format: int64
+          description: 0=Fired by server-side 1=Fired by client-side
+          example: 1 
+        gzip:
+          type: integer
+          format: int64
+          description: 1=enable 0=disable
+          example: 0
+        schain:
+          type: integer
+          format: int64
+          description: 1=enable 0=disable
+          example: 0
+        enable_userate:
+          type: integer
+          format: int64
+          example: 0
+        use_rate:
+          type: integer
+          format: int64
+          description: 0~100
+          example: 0
+        impression_mode:
+          type: integer
+          format: int64
+          description: 0=default 1=interactive 
+          example: 0
+        black_offline_bundle:
+          type: integer
+          format: int64
+          description: 1=enable 0=disable
+          example: 0
+        increase_markup_to_high_ivt_bundle:
+          type: integer
+          format: int64
+          description: 1=enable 0=disable
+          example: 0
+        cap:
+          type: array
+          description: insert into tab_dsp_cap
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 1 
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              mid:
+                  type: integer
+                  format: int64
+                  example: 105
+              style:
+                  type: integer
+                  format: int64
+                  description: 1=Native 2=Banner 3=Video
+                  example: 1  
+              hourly_cap:
+                  type: number
+                  description: 0=Daily 1=Hourly
+                  example: 0
+              cap:
+                  type: number
+                  description: greater than 0
+                  example: 0
+          required:
+            - cap
+        bundle_cap:
+          type: array
+          description: insert into dsp_bundle_cap
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 1 
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code
+                  example: "AR"
+              bundle:
+                  type: string
+                  description: split by "|"
+                  example: "123|xxx"
+              cap:
+                  type: number
+                  example: 0
+        qps:          
+          type: array
+          description: insert into tab_dsp_qps
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 1 
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              style:
+                  type: string
+                  description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                  example: "1|2" 
+              os:
+                  type: string
+                  description: multiple select. 1=iOS 2=Android 4=CTV 5=Web split by "|".
+                  example: 1053 
+              country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code. split by "|".
+                  example: "AR"
+              qps:
+                  type: number
+                  example: 0
+          required:
+            - qps
+        price:
+          type: array
+          description: insert into tab_dsp_price
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 1 
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              style:
+                  type: string
+                  description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                  example: "1|2" 
+              country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code. split by "|".
+                  example: "AR"
+              min_price:
+                  type: number
+                  description: step=0.01. greater than 0.
+                  example: 0
+              max_price:
+                  type: number
+                  description: step=0.01. greater than 0.
+                  example: 0
+        floor_ratio:
+          type: array
+          description: insert into tab_dsp_floor_ratio
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 1 
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              mid:
+                  type: string
+                  description: multiple select. Get data from tab_online_mid. split by "|".
+                  example: 1053     
+              style:
+                  type: string
+                  description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                  example: "1|2" 
+              country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code. split by "|".
+                  example: "AR"
+              floor_ratio:
+                  type: integer
+                  format: int64
+                  description: greater than 0 
+                  example: 50 
+              daily_allowance_limit:
+                  type: integer
+                  format: int64
+                  description: 0~1000 
+                  example: 50 
+          required:
+            - mid
+            - style    
+            - country
+            - floor_ratio
+        bundle_markup:
+          type: array
+          description: insert into tab_dsp_info
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 1 
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              mid:
+                  type: integer
+                  format: int64
+                  example: 105
+              markup:
+                  type: integer
+                  format: int64
+                  example: 10
+              bundle:
+                  type: string
+                  description: split by "|"
+                  example: "123|xxx"
+          required:
+            - markup    
+        ext:
+          type: string
+          example: ""
+        whiteops_prebid_block:
+          type: integer
+          format: int64
+          description: 1=enable 0=disable
+          example: 0
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19" 
+      required:
+        - customer
+        - name
+        - endpoint
+        - api_type
+        - auc_type
+        - win_type
+        - burl_type
+        - qps
+    DspTarget:   
+      type: object
+      description: tablename:tab_dsp_adset
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        adsetid:
+          type: integer
+          format: int64
+          example: 1014 
+        dspid:
+          type: integer
+          format: int64
+          description: Get date from tab_dsp_list.
+          example: 3014 
+        protocol:
+          type: integer
+          format: int64
+          description: 1=DSP_OPEN_AUCTION. Always set 1.
+          example: 1
+        os:
+          type: string
+          description: multiple select. 1=iOS 2=Android 4=CTV 5=Web split by "|".
+          example: 1053 
+        style:
+          type: string
+          description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+          example: "1|2" 
+        video_type:
+          type: integer
+          format: int64
+          description: 1=skippable 2=non-skippable 3=all. 
+          example: 1 
+        country:
+          type: string
+          description: multiple select. Get frome table:tab_cn_code. split by "|".
+          example: "AR"
+        size:
+          type: string
+          description: multiple select. Options=> 1024_768, 1200_627, 1200_800, 1200_900, 1280_700, 180_120, 2194_1755, 300_250, 320_480, 320_50, 344_194, 480_320, 480_360, 728_90, 768_1024. split by "|".
+          example: "1024_768|1200_627" 
+        skanid:
+          type: string
+          example: "zq492l623r.skadnetwork"
+        idfa_consent_filter:
+          type: integer
+          format: int64
+          example: 1 
+        bidprice_weight:
+          type: number
+          description: step=0.1, 0.7~1.0
+          example: 0.7
+        pos_white:
+          type: string
+          description: Get data from tab_online_pos
+          example: "131001|131002"
+        pos_black:
+          type: string
+          description: Get data from tab_online_pos
+          example: "131001|131002"
+        pkgwhite:
+          type: array
+          description: insert into tab_dsp_adset_pkgwhite
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1 
+              adsetid:
+                type: integer
+                format: int64
+                example: 1014 
+              dspid:
+                type: integer
+                format: int64
+                example: 1053 
+              mid:
+                type: string
+                description: Get data from tab_online_mid.
+                example: 1053    
+              bundle:
+                type: string
+                description: split by "|".
+                example: 
+              style:
+                type: integer
+                format: int64
+                description: 0=null 1=Native 2=Banner 3=Video.
+                example: 0
+            required:
+              - bundle
+        pkgblack_ivt:
+          type: array
+          description: insert into tab_dsp_adset_pkgblack
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1 
+              adsetid:
+                type: integer
+                format: int64
+                example: 1014 
+              dspid:
+                type: integer
+                format: int64
+                example: 1053 
+              mid:
+                type: string
+                description: Get data from tab_online_mid.
+                example: 1053    
+              bundle:
+                type: string
+                description: split by "|".
+                example: 
+              style:
+                type: integer
+                format: int64
+                description: 0=null 1=Native 2=Banner 3=Video.
+                example: 0
+              type:
+                type: integer
+                format: int64
+                description: Always set 0
+                example: 0 
+            required:
+              - bundle
+        pkgblack_whiteops:
+          type: array
+          description: insert into tab_dsp_adset_pkgblack
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1 
+              adsetid:
+                type: integer
+                format: int64
+                example: 1014 
+              dspid:
+                type: integer
+                format: int64
+                example: 1053 
+              mid:
+                type: string
+                description: Get data from tab_online_mid.
+                example: 1053    
+              bundle:
+                type: string
+                description: split by "|".
+                example: 
+              style:
+                type: integer
+                format: int64
+                description: 0=null 1=Native 2=Banner 3=Video.
+                example: 0
+              type:
+                type: integer
+                format: int64
+                description: Always set 2
+                example: 2 
+            required:
+              - bundle
+        pkgblack_op:
+          type: array
+          description: insert into tab_dsp_adset_pkgblack
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+                example: 1 
+              adsetid:
+                type: integer
+                format: int64
+                example: 1014 
+              dspid:
+                type: integer
+                format: int64
+                example: 1053 
+              mid:
+                type: string
+                description: Get data from tab_online_mid.
+                example: 1053    
+              bundle:
+                type: string
+                description: split by "|".
+                example: 
+              style:
+                type: integer
+                format: int64
+                description: 0=null 1=Native 2=Banner 3=Video.
+                example: 0
+              type:
+                type: integer
+                format: int64
+                description: Always set 1
+                example: 1
+            required:
+              - bundle
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19" 
+      required:
+        - dspid
+        - os
+        - style    
+    DspTagID:
+      type: object
+      description: tablename:tab_dsp_adset
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        tagid:
+          type: integer
+          format: int64
+          example: 101
+        dspid:
+          type: string
+          description: multiple select. Get date from tab_dsp_list. split by "|".
+          example: "3014|2313" 
+        os:
+          type: string
+          description: 1=iOS 2=Android 4=CTV 5=Web.
+          example: 1053 
+        style:
+          type: string
+          description: 1=Native 2=Banner 3=Video.
+          example: 1 
+        video_type:
+          type: integer
+          format: int64
+          description:  0=normal 1=reward. init=> empty option
+          example: 0
+        bundle:
+          type: string
+          description: split by "|".
+          example: "123|xx"
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19" 
+      required:
+        - tagid
+        - dspid
+        - os
+        - bundle 
+    DspAppID:
+      type: object
+      description: tablename:tab_dsp_appid_list
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        appid:
+          type: integer
+          format: int64
+          example: 101
+        dspid:
+          type: string
+          description: multiple select. Get date from tab_dsp_list. split by "|".
+          example: "3014|2313" 
+        bundle:
+          type: string
+          description: split by "|".
+          example: "123|xx"
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19" 
+      required:
+        - dspid
+        - appid
   securitySchemes:
     bearerAuth:
       type: http
