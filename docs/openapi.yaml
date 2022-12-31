@@ -49,7 +49,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.4
+  version: 1.0.5
 servers:
   - url: https://realtimebidding.medialink-x.com/dev
 tags:
@@ -6550,30 +6550,37 @@ components:
         inbound_valid_log:
           type: integer
           format: int64
+          description: options => 1=7 days  (Recommended) 2=14 days 3=30 days
           example: 1
         inbound_invalid_log:  
           type: integer
           format: int64
+          description: options => 1=7 days  (Recommended) 2=14 days 3=30 days
           example: 1
         sampling_log:
           type: integer
           format: int64
+          description: options => 1=60 days 2=90 days  (Recommended) 3=120 days
           example: 2
         click_log:
           type: integer
           format: int64
+          description: options => 1=360 days  (Recommended) 2=390 days 
           example: 1
         auction_log:
           type: integer
           format: int64
+          description: options => 1=90 days 2=180 days  (Recommended) 3=210 days
           example: 2
         request_related_report:
           type: integer
           format: int64
+          description: options => 1=90 days 2=180 days  (Recommended) 3=210 days
           example: 2
         billing_report:
           type: integer
           format: int64
+          description: options => 1=360 days  (Recommended) 2=390 days 
           example: 1        
         updateTime:
           type: string 
@@ -6602,6 +6609,7 @@ components:
         value:
           type: integer
           format: int64
+          description: options => 0=OFF 1=ON
           example: 1
         note:
           type: string
