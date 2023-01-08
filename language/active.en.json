@@ -848,5 +848,25 @@
   "saas_strategy_table_header_value": "Value",
   "saas_strategy_table_header_value_op_1": "OFF",
   "saas_strategy_table_header_value_op_2": "ON",  
-  "saas_strategy_table_header_note": "Note"
+  "saas_strategy_table_header_note": "Note",
+
+  "autoblock_strategy_title": "Auto Block High IVT Bundle",
+  "autoblock_strategy_filter_1": "IVT is higher than",
+  "autoblock_strategy_filter_2": "% -->block 100% traffic",
+  "autoblock_strategy_table_header_ivt": "IVT(%)",
+  "autoblock_strategy_validate_filter_type": "IVT(%) must be integer",
+  "autoblock_strategy_validate_filter_check": "IVT(%) must be between 0 and 100",
+
+  "markup_strategy_title": "Increase Markup to High IVT Traffic",
+  "markup_strategy_filter_1": "IVT start",
+  "markup_strategy_filter_2": ", end",
+  "markup_strategy_markup_1": "-->increase markup to",
+  "markup_strategy_table_header_smarkup": "Start Markup",
+  "markup_strategy_table_header_emarkup": "End Markup",
+  "markup_strategy_table_header_markup_filter": "Markup(%)",
+  "markup_strategy_validate_smarkup_check": "Markup start must be between 0 and 100",
+  "markup_strategy_validate_emarkup_check": "Markup end must be between 0 and 100",
+  "markup_strategy_validate_markup_compare": "Markup end must be higher than start",
+  "markup_strategy_validate_markup_filter_type": "filter(%) must be integer",
+  "markup_strategy_validate_markup_filter_check": "filter(%) must be between 0 and 100"
 }

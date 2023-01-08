@@ -330,6 +330,26 @@ CREATE TABLE `tab_pos_extra_info_setting` (
   `description` text,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Table structure for table `tab_dsp_increase_markup`
+-- Table for "DSP Strategy" page
+--
+
+DROP TABLE IF EXISTS `tab_dsp_increase_markup`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `tab_dsp_increase_markup` (
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `posid` text NOT NULL,
+  `smarkup` varchar(20) NOT NULL,
+  `emarkup` varchar(20) NOT NULL,
+  `filter` int unsigned NOT NULL,
+  `gid` int unsigned NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb3;
+
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 

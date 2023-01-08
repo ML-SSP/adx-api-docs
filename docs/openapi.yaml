@@ -49,7 +49,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.5
+  version: 1.0.6
 servers:
   - url: https://realtimebidding.medialink-x.com/dev
 tags:
@@ -4627,6 +4627,215 @@ paths:
           description: Invalid tag value  
       security:
         - bearerAuth: []  
+  /admin/base/ssp/autoblock/page:
+    post:
+      tags:
+        - base/ssp
+      description: Page name is 'SSP Strategy'. Get data of ssp strategy page. This page only role "sysadmin" can be displayed.
+      operationId: getAutoblockPage
+      requestBody:
+        required: true
+        description: autoblock data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/SSPAutoblock'
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/ssp/autoblock/info:
+    get:
+      tags:
+        - base/ssp
+      description: Returns a single autoblock data
+      operationId: getAutoblockDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of autoblock to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSPAutoblock'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/ssp/autoblock/add:
+    post:
+      tags:
+        - base/ssp
+      description: add data of ssp page.
+      operationId: addAutoblockData
+      requestBody:
+        required: true
+        description: add autoblock data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3
+                filter:
+                  type: integer
+                  format: int64
+                  description: 0-100%
+                  example: 30 
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/ssp/autoblock/delete:
+    post:
+      tags:
+        - base/ssp
+      description: Deletes autoblock data
+      operationId: deleteAutoblock
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/ssp/autoblock/update:
+    post:
+      tags:
+        - base/ssp
+      description: update data of ssp autoblock strategy page.
+      operationId: updateAutoblockData
+      requestBody:
+        required: true
+        description: update autoblock data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SSPAutoblock'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []         
   /admin/base/dsp/outboundrcpm/page:
     post:
       tags:
@@ -4859,6 +5068,223 @@ paths:
           description: Invalid tag value  
       security:
         - bearerAuth: []
+  /admin/base/dsp/increasemarkup/page:
+    post:
+      tags:
+        - base/dsp
+      description: Page name is 'DSP Strategy'. Get data of dsp strategy page. This page only role "sysadmin" can be displayed.
+      operationId: getIncreaseMarkupPage
+      requestBody:
+        required: true
+        description: increase markup data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DSPIncreaseMarkup'
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/increasemarkup/info:
+    get:
+      tags:
+        - base/dsp
+      description: Returns a single increase markup data
+      operationId: getIncreaseMarkupDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of increase markup to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DSPIncreaseMarkup'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/dsp/increasemarkup/add:
+    post:
+      tags:
+        - base/dsp
+      description: add data of dsp strategy page.
+      operationId: addIncreaseMarkupData
+      requestBody:
+        required: true
+        description: add increase markup data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3
+                smarkup:
+                  type: number 
+                  description: 0 ~ 100
+                  example: 10 
+                emarkup:
+                  type: number 
+                  description: 0 ~ 100. ebidrate > sbidrate
+                  example: 100
+                filter:
+                  type: integer
+                  format: int64
+                  description: 0-100%
+                  example: 30 
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/increasemarkup/delete:
+    post:
+      tags:
+        - base/dsp
+      description: Deletes increase markup data
+      operationId: deleteIncreaseMarkup
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/increasemarkup/update:
+    post:
+      tags:
+        - base/dsp
+      description: update data of dsp strategy page.
+      operationId: updateIncreaseMarkupData
+      requestBody:
+        required: true
+        description: update increase markup data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DSPIncreaseMarkup'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []        
   /admin/base/dsp/dsplist/page:
     post:
       tags:
@@ -5318,6 +5744,356 @@ paths:
           description: Invalid tag value  
       security:
         - bearerAuth: []
+  /admin/base/dsp/buyers/page:
+    post:
+      tags:
+        - base/dsp
+      description: Page name is 'Buyers'. Get data of buyers page. 
+      operationId: getBuyersPage
+      requestBody:
+        required: true
+        description: buyers data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19" 
+                            dspid:
+                              type: integer
+                              format: int64
+                              example: 3132  
+                            customer:
+                              type: integer
+                              format: int64
+                              description: Get data from tab_company_info
+                              example: 3132  
+                            status:
+                              type: integer
+                              format: int64
+                              description: 1=enable 0=disable
+                              example: 1
+                            name:
+                              type: string
+                              example: "Tappx_ios"
+                            updateTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19" 
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/buyers/info:
+    get:
+      tags:
+        - base/dsp
+      description: Returns a single buyers data
+      operationId: getBuyersDataById
+      parameters:
+        - name: dspid
+          in: query
+          description: ID of buyers to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Buyers'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/dsp/buyers/add:
+    post:
+      tags:
+        - base/dsp
+      description: add data of buyers page.
+      operationId: addBuyersData
+      requestBody:
+        required: true
+        description: add buyers data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3
+                customer:
+                  type: integer
+                  format: int64
+                  description: Get data from tab_company_info
+                  example: 3132  
+                status:
+                  type: integer
+                  format: int64
+                  description: 1=enable 0=disable
+                  example: 1
+                name:
+                  type: string
+                  example: "Tappx_ios"
+                endpoint:
+                  type: string
+                  example: "http://ssp.api.tappx.com/rtb/2.3.1/ZZ19173CHEE1504800233?appkey=Pub-36127-iOS-5876"
+                tmax:
+                  type: integer
+                  format: int64
+                  description: 0 < tmax < 150
+                  example: 20 
+                api_type:
+                  type: integer
+                  format: int64
+                  description: 1=CUSTOMER 2=RTB2.3 3=RTB2.5
+                  example: 1 
+                win_type:
+                  type: integer
+                  format: int64
+                  description: 1=CLOSE_WIN 2=SEND_BY_SERVER 3=SEND_WITH_IMPRESSION
+                  example: 1 
+                burl_type:
+                  type: integer
+                  format: int64
+                  description: 0=Fired by server-side 1=Fired by client-side
+                  example: 1 
+                gzip:
+                  type: integer
+                  format: int64
+                  description: 1=enable 0=disable
+                  example: 0
+                schain:
+                  type: integer
+                  format: int64
+                  description: 1=enable 0=disable
+                  example: 0
+                qps:          
+                  type: array
+                  description: insert into tab_dsp_qps
+                  items:
+                    type: object
+                    properties:
+                      style:
+                          type: string
+                          description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                          example: "1|2" 
+                      os:
+                          type: string
+                          description: multiple select. 1=iOS 2=Android 4=CTV 5=Web split by "|".
+                          example: 1053 
+                      country:
+                          type: string
+                          description: multiple select. Get frome table:tab_cn_code. split by "|".
+                          example: "AR"
+                      qps:
+                          type: number
+                          example: 0
+                  required:
+                    - qps
+                price:
+                  type: array
+                  description: insert into tab_dsp_price
+                  items:
+                    type: object
+                    properties:
+                      style:
+                          type: string
+                          description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                          example: "1|2" 
+                      country:
+                          type: string
+                          description: multiple select. Get frome table:tab_cn_code. split by "|".
+                          example: "AR"
+                      min_price:
+                          type: number
+                          description: step=0.01. greater than 0.
+                          example: 0
+                      max_price:
+                          type: number
+                          description: step=0.01. greater than 0.
+                          example: 0
+                bundle_markup:
+                  type: array
+                  description: insert into tab_dsp_info
+                  items:
+                    type: object
+                    properties:
+                      mid:
+                          type: integer
+                          format: int64
+                          example: 105
+                      markup:
+                          type: integer
+                          format: int64
+                          example: 10
+                      bundle:
+                          type: string
+                          description: split by "|"
+                          example: "123|xxx"
+                  required:
+                    - markup    
+                ext:
+                  type: string
+                  example: ""
+              required:
+                - customer
+                - name
+                - endpoint
+                - api_type
+                - win_type
+                - burl_type
+                - qps
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/buyers/delete:
+    post:
+      tags:
+        - base/dsp
+      description: Deletes buyers data
+      operationId: deleteBuyers
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/buyers/update:
+    post:
+      tags:
+        - base/dsp
+      description: update data of buyers page.
+      operationId: updateBuyersData
+      requestBody:
+        required: true
+        description: update buyers data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Buyers'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
+        - bearerAuth: []        
   /admin/base/dsp/dsptarget/page:
     post:
       tags:
@@ -7701,6 +8477,62 @@ components:
         updateTime:
           type: string 
           example: "2022-12-15 13:35:19"   
+    SSPAutoblock:   
+      type: object
+      description: tablename:tab_ssp_auto_block
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        id:  
+          type: integer
+          format: int64
+          example: 1  
+        filter:
+          type: integer
+          format: int64
+          description: 0-100%
+          example: 30 
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19"      
+    DSPIncreaseMarkup:   
+      type: object
+      description: tablename:tab_dsp_increase_markup
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        id:  
+          type: integer
+          format: int64
+          example: 1  
+        smarkup:
+          type: integer
+          format: int64
+          description: 0-100%
+          example: 30   
+        emarkup:
+          type: integer
+          format: int64
+          description: 0-100%
+          example: 30            
+        filter:
+          type: integer
+          format: int64
+          description: 0-100%
+          example: 30 
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19"              
     DSPOutboundRCPM:   
       type: object
       description: tablename:tab_dsp_outbound_rcpm
@@ -8045,6 +8877,170 @@ components:
         - win_type
         - burl_type
         - qps
+    Buyers:   
+      type: object
+      description: tablename:tab_dsp_list
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        dspid:
+          type: integer
+          format: int64
+          example: 3132  
+        customer:
+          type: integer
+          format: int64
+          description: Get data from tab_company_info
+          example: 3132  
+        status:
+          type: integer
+          format: int64
+          description: 1=enable 0=disable
+          example: 1
+        name:
+          type: string
+          example: "Tappx_ios"
+        endpoint:
+          type: string
+          example: "http://ssp.api.tappx.com/rtb/2.3.1/ZZ19173CHEE1504800233?appkey=Pub-36127-iOS-5876"
+        tmax:
+          type: integer
+          format: int64
+          description: 0 < tmax < 150
+          example: 20 
+        api_type:
+          type: integer
+          format: int64
+          description: 1=CUSTOMER 2=RTB2.3 3=RTB2.5
+          example: 1 
+        win_type:
+          type: integer
+          format: int64
+          description: 1=CLOSE_WIN 2=SEND_BY_SERVER 3=SEND_WITH_IMPRESSION
+          example: 1 
+        burl_type:
+          type: integer
+          format: int64
+          description: 0=Fired by server-side 1=Fired by client-side
+          example: 1 
+        gzip:
+          type: integer
+          format: int64
+          description: 1=enable 0=disable
+          example: 0
+        schain:
+          type: integer
+          format: int64
+          description: 1=enable 0=disable
+          example: 0
+        qps:          
+          type: array
+          description: insert into tab_dsp_qps
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 1 
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              style:
+                  type: string
+                  description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                  example: "1|2" 
+              os:
+                  type: string
+                  description: multiple select. 1=iOS 2=Android 4=CTV 5=Web split by "|".
+                  example: 1053 
+              country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code. split by "|".
+                  example: "AR"
+              qps:
+                  type: number
+                  example: 0
+          required:
+            - qps
+        price:
+          type: array
+          description: insert into tab_dsp_price
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 1 
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              style:
+                  type: string
+                  description: multiple select. 1=Native 2=Banner 3=Video. split by "|".
+                  example: "1|2" 
+              country:
+                  type: string
+                  description: multiple select. Get frome table:tab_cn_code. split by "|".
+                  example: "AR"
+              min_price:
+                  type: number
+                  description: step=0.01. greater than 0.
+                  example: 0
+              max_price:
+                  type: number
+                  description: step=0.01. greater than 0.
+                  example: 0
+        bundle_markup:
+          type: array
+          description: insert into tab_dsp_info
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 1 
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              mid:
+                  type: integer
+                  format: int64
+                  example: 105
+              markup:
+                  type: integer
+                  format: int64
+                  example: 10
+              bundle:
+                  type: string
+                  description: split by "|"
+                  example: "123|xxx"
+          required:
+            - markup    
+        ext:
+          type: string
+          example: ""
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19" 
+      required:
+        - customer
+        - name
+        - endpoint
+        - api_type
+        - win_type
+        - burl_type
+        - qps        
     DspTarget:   
       type: object
       description: tablename:tab_dsp_adset
