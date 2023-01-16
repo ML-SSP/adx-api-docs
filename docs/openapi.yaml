@@ -49,7 +49,7 @@ info:
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  version: 1.0.6
+  version: 1.0.7
 servers:
   - url: https://realtimebidding.medialink-x.com/dev
 tags:
@@ -6093,6 +6093,378 @@ paths:
         '400':
           description: Invalid tag value  
       security:
+        - bearerAuth: []   
+  /admin/base/dsp/deals/page:
+    post:
+      tags:
+        - base/dsp
+      description: Page name is 'Deals'. Get data of deals page. 
+      operationId: getDealsPage
+      requestBody:
+        required: true
+        description: deals data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                page:
+                  type: integer
+                  format: int64
+                  example: 1
+                size:
+                  type: integer
+                  format: int64
+                  example: 20
+                company_type:
+                  type: integer
+                  format: int64
+                  example: 0
+              required:
+                - page
+                - size  
+              
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                    example: 1000
+                  message:
+                    type: string
+                    example: "success"
+                  data:
+                    type: object
+                    properties:
+                      list:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            createTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19" 
+                            id:
+                              type: integer
+                              format: int64
+                              example: 3 
+                            dealid:
+                              type: string
+                              example: "ML_2021121511251" 
+                            dspid:
+                              type: integer
+                              format: int64
+                              example: 3150 
+                            status:
+                              type: integer
+                              format: int64
+                              description: 0=enable 1=disable. default=0
+                              example: 0
+                            deal_name:
+                              type: string
+                              example: "Test_PA_GFP"
+                            deal_type:
+                              type: integer
+                              format: int64
+                              description: 0=House Ad 2=Private Auction 3=Preferred Deals 4=Programmatic Guaranteed
+                              example: 1
+                            updateTime: 
+                              type: string
+                              example: "2022-12-15 13:35:19" 
+                      pagination:
+                        type: object
+                        properties:
+                          page:
+                            type: integer
+                            format: int64
+                            example: 1  
+                          size:
+                            type: integer
+                            format: int64
+                            example: 20   
+                          total:
+                            type: integer
+                            format: int64
+                            example: 6 
+        '400':
+          description: Invalid tag value
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/deals/info:
+    get:
+      tags:
+        - base/dsp
+      description: Returns a single deals data
+      operationId: getDealsDataById
+      parameters:
+        - name: id
+          in: query
+          description: ID of deals to return
+          required: true
+          schema:
+            type: integer
+            format: int64  
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Deals'
+        '400':
+          description: Invalid ID supplied   
+      security:
+        - bearerAuth: []        
+  /admin/base/dsp/deals/add:
+    post:
+      tags:
+        - base/dsp
+      description: add data of deals page.
+      operationId: addDealsData
+      requestBody:
+        required: true
+        description: add deals data body
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dealid:
+                  type: string
+                  example: "2022-12-15 13:35:19" 
+                dspid:
+                  type: integer
+                  format: int64
+                  example: 3150 
+                buyer_seats:
+                  type: string
+                  example: "" 
+                status:
+                  type: integer
+                  format: int64
+                  description: 0=enable 1=disable. default=0
+                  example: 0
+                advertiser:
+                  type: string
+                  example: "Toyota"
+                account_manager:
+                  type: string
+                  description: Get data from user.
+                  example: "adminnz"
+                deal_name:
+                  type: string
+                  example: "Test_PA_GFP"
+                deal_type:
+                  type: integer
+                  format: int64
+                  description: 0=House Ad 2=Private Auction 3=Preferred Deals 4=Programmatic Guaranteed
+                  example: 1 
+                clearing_price_type:
+                  type: integer
+                  format: int64
+                  description: 1=GFP 2=GSP 3=Fixed-price. clearing_price_type enable if deal_type==2.
+                  example: 1
+                bid_floor:
+                  type: number
+                  description: type="number" step="0.01" min="0.1" value=""
+                  example: 0.1
+                bid_floor_currency:
+                  type: integer
+                  format: int64
+                  description: 1=USD
+                  example: 1
+                bidprice_weight:
+                  type: number
+                  description: type="number" step="1" min="0.7" max="1" value=""
+                  example: 0.7
+                daily_freq_cap:
+                  type: number
+                  description: type="number" step="1" min="0" value=""
+                  example: ""
+                start_date:
+                  type: string
+                  example: "2022-01-26 20:00"
+                end_date:
+                  type: string
+                  example: "2022-01-31 00:00"
+                budget_cap:
+                  type: array
+                  description: insert into dsp_budget_cap
+                  items:
+                    type: object
+                    properties:
+                      dspid:
+                          type: integer
+                          format: int64
+                          example: 1053 
+                      posid:
+                          type: integer
+                          format: int64
+                          example: 767105
+                      total_budget:
+                          type: number
+                          description: type="number" step="0.01" min="0" value=""
+                          example: 0.1
+                      delivery_impression:
+                          type: integer
+                          format: int64
+                          description: 1=Evenly 2=As fast as possible
+                          example: 1
+                      dealkeyid:
+                          type: integer
+                          format: int64
+                          description: dealkeyid==tab_deals.id
+                          example: 16002 
+                  required:
+                    - posid
+                    - total_budget
+                    - delivery_impression
+                date_radio: 
+                  type: integer
+                  format: int64
+                  description: checkbox for "Date". default=0
+                  example: 0
+                style:
+                  type: string
+                  description: 1=Native 2=Banner 3=Video. 
+                  example: 1
+                inventory:
+                  type: string
+                  description: 1=Application 2=Placement
+                  example: 1
+                include_application:
+                    type: string
+                    description: multiple select. Get frome table:tab_cn_code. split by "|".
+                    example: "123|321"
+                include_placement:
+                    type: string
+                    description: multiple select. Get data from tab_online_mid
+                skanid:
+                  type: string
+                  example: ""
+                idfa_consent_filter:
+                  type: integer
+                  format: int64
+                  description: checkbox. default=0
+                  example: 0
+                targeting: 
+                  type: object
+                  description: save a json. 
+                  example: '{"age": ["3"], "gender": ["M", "F", "U"], "country": ["USA"], "age_text": "25~34", "language": ["en"], "gender_text": "Male, Female, Unknown", "country_text": "USA-America", "language_text": "English (en)"}'
+                custom_targeting: 
+                  type: object
+                  description: save a json. 
+                  example: '{"aram": ["5", "6"], "battery": ["85"], "wi_streng": ["-30"], "membership": ["vip"]}'
+                custom_targeting_ui:
+                  type: object
+                  description: save a json. 
+                  example: '{"aram": ["5", "6"], "battery": ["85"], "wi_streng": ["-30"], "membership": ["vip"]}'
+                gid:
+                  type: integer
+                  format: int64
+                  example: 3  
+              required:
+                - deal_name
+                - dspid
+                - deal_type
+                - bid_floor
+                - start_date
+                - end_date      
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+                    data: 
+                      id: 1          
+        '400':
+          description: Invalid tag value    
+      security:
+        - bearerAuth: []   
+  /admin/base/dsp/deals/delete:
+    post:
+      tags:
+        - base/dsp
+      description: Deletes deals data
+      operationId: deleteDeals
+      requestBody:
+        required: true
+        description: ids that need to be deleted
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: integer
+                    format: int64
+                    example: 15
+            
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int64
+                  message:
+                    type: string
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"  
+      security:
+        - bearerAuth: []
+  /admin/base/dsp/deals/update:
+    post:
+      tags:
+        - base/dsp
+      description: update data of deals page.
+      operationId: updateDealsData
+      requestBody:
+        required: true
+        description: update deals data body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Deals'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              examples:
+                code1000:
+                  value: 
+                    code: 1000
+                    message: "success"        
+        '400':
+          description: Invalid tag value  
+      security:
         - bearerAuth: []        
   /admin/base/dsp/dsptarget/page:
     post:
@@ -9040,7 +9412,166 @@ components:
         - api_type
         - win_type
         - burl_type
-        - qps        
+        - qps     
+    Deals:
+      type: object
+      description: tablename:tab_deals
+      properties:  
+        createTime: 
+          type: string
+          example: "2022-12-15 13:35:19" 
+        id:
+          type: integer
+          format: int64
+          example: 3 
+        dealid:
+          type: string
+          example: "2022-12-15 13:35:19" 
+        dspid:
+          type: integer
+          format: int64
+          example: 3150 
+        buyer_seats:
+          type: string
+          example: "" 
+        status:
+          type: integer
+          format: int64
+          description: 0=enable 1=disable. default=0
+          example: 0
+        advertiser:
+          type: string
+          example: "Toyota"
+        account_manager:
+          type: string
+          description: Get data from user.
+          example: "adminnz"
+        deal_name:
+          type: string
+          example: "Test_PA_GFP"
+        deal_type:
+          type: integer
+          format: int64
+          description: 0=House Ad 2=Private Auction 3=Preferred Deals 4=Programmatic Guaranteed
+          example: 1 
+        clearing_price_type:
+          type: integer
+          format: int64
+          description: 1=GFP 2=GSP 3=Fixed-price. clearing_price_type enable if deal_type==2.
+          example: 1
+        bid_floor:
+          type: number
+          description: type="number" step="0.01" min="0.1" value=""
+          example: 0.1
+        bid_floor_currency:
+          type: integer
+          format: int64
+          description: 1=USD
+          example: 1
+        bidprice_weight:
+          type: number
+          description: type="number" step="1" min="0.7" max="1" value=""
+          example: 0.7
+        daily_freq_cap:
+          type: number
+          description: type="number" step="1" min="0" value=""
+          example: ""
+        start_date:
+          type: string
+          example: "2022-01-26 20:00"
+        end_date:
+          type: string
+          example: "2022-01-31 00:00"
+        budget_cap:
+          type: array
+          description: insert into dsp_budget_cap
+          items:
+            type: object
+            properties:
+              id:
+                  type: integer
+                  format: int64
+                  example: 16003
+              dspid:
+                  type: integer
+                  format: int64
+                  example: 1053 
+              posid:
+                  type: integer
+                  format: int64
+                  example: 767105
+              total_budget:
+                  type: number
+                  description: type="number" step="0.01" min="0" value=""
+                  example: 0.1
+              delivery_impression:
+                  type: integer
+                  format: int64
+                  description: 1=Evenly 2=As fast as possible
+                  example: 1
+              dealkeyid:
+                  type: integer
+                  format: int64
+                  description: dealkeyid==tab_deals.id
+                  example: 16002 
+          required:
+            - posid
+            - total_budget
+            - delivery_impression
+        date_radio: 
+          type: integer
+          format: int64
+          description: checkbox for "Date". default=0
+          example: 0
+        style:
+          type: string
+          description: 1=Native 2=Banner 3=Video. 
+          example: 1
+        inventory:
+          type: string
+          description: 1=Application 2=Placement
+          example: 1
+        include_application:
+            type: string
+            description: multiple select. Get frome table:tab_cn_code. split by "|".
+            example: "123|321"
+        include_placement:
+            type: string
+            description: multiple select. Get data from tab_online_mid
+        skanid:
+          type: string
+          example: ""
+        idfa_consent_filter:
+          type: integer
+          format: int64
+          description: checkbox. default=0
+          example: 0
+        targeting: 
+          type: object
+          description: save a json. 
+          example: '{"age": ["3"], "gender": ["M", "F", "U"], "country": ["USA"], "age_text": "25~34", "language": ["en"], "gender_text": "Male, Female, Unknown", "country_text": "USA-America", "language_text": "English (en)"}'
+        custom_targeting: 
+          type: object
+          description: save a json. 
+          example: '{"aram": ["5", "6"], "battery": ["85"], "wi_streng": ["-30"], "membership": ["vip"]}'
+        custom_targeting_ui:
+          type: object
+          description: save a json. 
+          example: '{"aram": ["5", "6"], "battery": ["85"], "wi_streng": ["-30"], "membership": ["vip"]}'
+        gid:
+          type: integer
+          format: int64
+          example: 3  
+        updateTime:
+          type: string 
+          example: "2022-12-15 13:35:19" 
+      required:
+        - deal_name
+        - dspid
+        - deal_type
+        - bid_floor
+        - start_date
+        - end_date
     DspTarget:   
       type: object
       description: tablename:tab_dsp_adset
